@@ -1,0 +1,1166 @@
+:root {
+  color-scheme: light dark;
+  --bg: oklch(0.945 0.004 90);
+  --surface: oklch(0.99 0.002 90);
+  --well: oklch(0.955 0.004 90);
+  --ink: oklch(0.2 0.006 90);
+  --quiet: oklch(0.5 0.006 90);
+  --faint: oklch(0.66 0.006 90);
+  --line: oklch(0.9 0.004 90);
+  --ring: oklch(0.2 0.01 90 / 0.05);
+  --code-comment: oklch(0.62 0.006 90);
+  --code-string: oklch(0.5 0.1 150);
+  --code-keyword: oklch(0.52 0.13 30);
+  --code-number: oklch(0.52 0.11 80);
+  --code-function: oklch(0.48 0.12 250);
+  --code-type: oklch(0.5 0.1 300);
+  --on-ink: oklch(0.98 0.002 90);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Elevation has one light source, above. Every raised thing catches it on its top edge and casts below. */
+  --edge: inset 0 1px 0 oklch(1 0 0 / 0.75);
+  --raise-card: var(--edge), 0 0 0 1px oklch(0.2 0.01 90 / 0.05), 0 1px 2px oklch(0.2 0.01 90 / 0.05), 0 10px 28px -12px oklch(0.2 0.01 90 / 0.16);
+  --raise-control: var(--edge), 0 0 0 1px oklch(0.2 0.01 90 / 0.08), 0 1px 2px oklch(0.2 0.01 90 / 0.1), 0 3px 8px -3px oklch(0.2 0.01 90 / 0.14);
+  --raise-hover: var(--edge), 0 0 0 1px oklch(0.2 0.01 90 / 0.1), 0 2px 3px oklch(0.2 0.01 90 / 0.1), 0 6px 14px -4px oklch(0.2 0.01 90 / 0.18);
+  --press: inset 0 1px 2px oklch(0.2 0.01 90 / 0.14), 0 0 0 1px oklch(0.2 0.01 90 / 0.08);
+  --sink: inset 0 1px 3px oklch(0.2 0.01 90 / 0.09), inset 0 0 0 1px oklch(0.2 0.01 90 / 0.04), 0 1px 0 oklch(1 0 0 / 0.7);
+  --raise-ink: inset 0 1px 0 oklch(1 0 0 / 0.2), 0 0 0 1px oklch(0.2 0.01 90 / 0.5), 0 1px 2px oklch(0.2 0.01 90 / 0.2), 0 4px 10px -3px oklch(0.2 0.01 90 / 0.32);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: oklch(0.15 0.003 90);
+    --surface: oklch(0.205 0.004 90);
+    --well: oklch(0.165 0.003 90);
+    --ink: oklch(0.95 0.003 90);
+    --quiet: oklch(0.68 0.004 90);
+    --faint: oklch(0.52 0.004 90);
+    --line: oklch(0.28 0.004 90);
+    --ring: oklch(0 0 0 / 0.4);
+    --code-comment: oklch(0.55 0.006 90);
+    --code-string: oklch(0.8 0.09 150);
+    --code-keyword: oklch(0.76 0.11 30);
+    --code-number: oklch(0.82 0.09 85);
+    --code-function: oklch(0.78 0.09 250);
+    --code-type: oklch(0.78 0.09 300);
+    --on-ink: oklch(0.17 0.003 90);
+
+    --edge: inset 0 1px 0 oklch(1 0 0 / 0.07);
+    --raise-card: var(--edge), 0 0 0 1px oklch(0 0 0 / 0.4), 0 1px 2px oklch(0 0 0 / 0.3), 0 12px 30px -12px oklch(0 0 0 / 0.65);
+    --raise-control: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 0 0 1px oklch(0 0 0 / 0.45), 0 1px 2px oklch(0 0 0 / 0.4), 0 3px 8px -3px oklch(0 0 0 / 0.5);
+    --raise-hover: inset 0 1px 0 oklch(1 0 0 / 0.13), 0 0 0 1px oklch(0 0 0 / 0.5), 0 2px 3px oklch(0 0 0 / 0.4), 0 6px 14px -4px oklch(0 0 0 / 0.6);
+    --press: inset 0 1px 3px oklch(0 0 0 / 0.5), 0 0 0 1px oklch(0 0 0 / 0.45);
+    --sink: inset 0 1px 3px oklch(0 0 0 / 0.5), inset 0 0 0 1px oklch(0 0 0 / 0.25), 0 1px 0 oklch(1 0 0 / 0.05);
+    --raise-ink: inset 0 1px 0 oklch(1 0 0 / 0.7), 0 0 0 1px oklch(0 0 0 / 0.4), 0 1px 2px oklch(0 0 0 / 0.4), 0 4px 10px -3px oklch(0 0 0 / 0.6);
+  }
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font:
+    400 14px / 1.5 "Geist",
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+button {
+  cursor: pointer;
+}
+
+button:disabled {
+  color: var(--faint);
+  cursor: default;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+fieldset {
+  min-width: 0;
+  padding: 0;
+  border: 0;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: 16px;
+  box-shadow: var(--raise-card);
+}
+
+h2 {
+  margin-bottom: 6px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--faint);
+}
+
+h3 {
+  margin: 20px 0 8px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* Frame */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100dvh;
+  padding: 0 16px 16px;
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 8px 2px;
+}
+
+.mark {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+}
+
+.bar nav {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--well);
+  box-shadow: var(--sink);
+}
+
+.bar nav a {
+  padding: 4px 14px;
+  border-radius: 7px;
+  color: var(--quiet);
+  transition: color 120ms var(--ease);
+}
+
+.bar nav a:hover {
+  color: var(--ink);
+}
+
+.bar nav a[aria-current="page"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: var(--raise-control);
+}
+
+/* The stage: one centered column, read top to bottom, with the sound as its largest thing. */
+
+.stage {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Room for the cards' shadows, which scrolling containers would otherwise clip. */
+  margin: -4px;
+  padding: 8px 4px 28px;
+}
+
+.stage::-webkit-scrollbar {
+  display: none;
+}
+
+.stage-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.stage-column > .sound,
+.stage-column > .try,
+.stage-column > .browser,
+.stage-column > .sound-picker,
+.stage-column > .codeblock {
+  width: 100%;
+}
+
+/* Moods are tabs. The active one shares the panel's colour and overlaps its top edge, so the two read as one shape. */
+
+.moods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding-inline: 14px;
+}
+
+.moods button {
+  position: relative;
+  padding: 8px 16px 9px;
+  border-radius: 11px 11px 0 0;
+  color: var(--quiet);
+  white-space: nowrap;
+  transition: color 120ms var(--ease);
+}
+
+.moods button:hover {
+  color: var(--ink);
+}
+
+.moods button[aria-current="true"] {
+  z-index: 1;
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow:
+    var(--edge),
+    0 -1px 0 var(--ring),
+    -1px 0 0 var(--ring),
+    1px 0 0 var(--ring);
+}
+
+/* Covers the panel's top edge under the active tab, which removes the seam between them. */
+.moods button[aria-current="true"]::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -3px;
+  height: 4px;
+  background: var(--surface);
+}
+
+.presets {
+  position: relative;
+  padding: 16px 18px 18px;
+}
+
+.presets h2,
+.sound-picker h2 {
+  margin-bottom: 10px;
+  font-size: 12.5px;
+  color: var(--quiet);
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+  gap: 6px;
+}
+
+.preset-grid button {
+  padding: 9px 8px;
+  border-radius: 10px;
+  background: var(--well);
+  color: var(--quiet);
+  white-space: nowrap;
+  box-shadow: var(--sink);
+  transition:
+    color 120ms var(--ease),
+    box-shadow 140ms var(--ease);
+}
+
+.preset-grid button:hover {
+  color: var(--ink);
+}
+
+.preset-grid button[aria-current="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+  font-weight: 500;
+  box-shadow: var(--raise-ink);
+}
+
+.sound-picker {
+  text-align: center;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2px 4px;
+}
+
+.choices button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  color: var(--quiet);
+  white-space: nowrap;
+  transition:
+    color 120ms var(--ease),
+    background-color 120ms var(--ease);
+}
+
+.choices button:hover {
+  background: var(--well);
+  color: var(--ink);
+}
+
+.choices button[aria-current="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: var(--raise-control);
+}
+
+.choices i {
+  flex: none;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* The sound */
+
+.sound {
+  padding: 26px 28px 28px;
+}
+
+.sound header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.sound h1 {
+  font-size: 38px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
+}
+
+.sound header .play {
+  flex: none;
+  margin-top: 4px;
+}
+
+.hint {
+  margin-top: 4px;
+  color: var(--quiet);
+}
+
+.sliders.pair {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* An odd slider out spans the row, so the block never ends with a hole. */
+.sliders.pair .slider:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.buttons.centered {
+  justify-content: center;
+  margin-top: 4px;
+}
+
+/* Code block: a raised panel, with its code sunk into a well that opens below the title bar. */
+
+.codeblock {
+  padding: 8px;
+  border-radius: 14px;
+}
+
+.codeblock header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-left: 8px;
+}
+
+.code-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.code-toggle svg,
+.code-copy svg {
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.code-toggle svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 1.6;
+  color: var(--quiet);
+  transition: transform 200ms var(--ease);
+}
+
+[data-open] .code-toggle svg {
+  transform: rotate(90deg);
+}
+
+.code-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 5px 11px 5px 9px;
+  font-size: 13px;
+}
+
+.code-copy svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.4;
+}
+
+.code-reveal {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 260ms var(--ease);
+}
+
+[data-open] .code-reveal {
+  grid-template-rows: 1fr;
+}
+
+.code-reveal > div {
+  min-height: 0;
+  overflow: hidden;
+  /* The well's shadow sits just outside it, so leave it room inside the clip. */
+  padding: 8px 1px 1px;
+}
+
+.token-comment {
+  color: var(--code-comment);
+}
+
+.token-string {
+  color: var(--code-string);
+}
+
+.token-keyword {
+  color: var(--code-keyword);
+}
+
+.token-number {
+  color: var(--code-number);
+}
+
+.token-function {
+  color: var(--code-function);
+}
+
+.token-type {
+  color: var(--code-type);
+}
+
+.token-property {
+  color: var(--ink);
+}
+
+/* Buttons */
+
+.button,
+.play {
+  border-radius: 10px;
+  background: var(--surface);
+  font-weight: 500;
+  box-shadow: var(--raise-control);
+  transition:
+    box-shadow 140ms var(--ease),
+    transform 140ms var(--ease);
+}
+
+.button {
+  padding: 7px 14px;
+}
+
+.button:hover:not(:disabled),
+.play:hover:not(:disabled) {
+  box-shadow: var(--raise-hover);
+  transform: translateY(-1px);
+}
+
+.button:active:not(:disabled),
+.play:active:not(:disabled) {
+  box-shadow: var(--press);
+  transform: translateY(1px);
+}
+
+.primary,
+.play {
+  background: var(--ink);
+  color: var(--on-ink);
+  box-shadow: var(--raise-ink);
+}
+
+.primary:hover:not(:disabled),
+.play:hover:not(:disabled) {
+  box-shadow: var(--raise-ink);
+}
+
+.play {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 20px;
+  padding: 9px 18px;
+}
+
+.play.big {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+}
+
+.play:disabled,
+.primary:disabled {
+  background: var(--line);
+  color: var(--faint);
+  box-shadow: none;
+}
+
+kbd {
+  font: inherit;
+  font-size: 12px;
+  font-weight: 400;
+  opacity: 0.6;
+}
+
+.link {
+  color: var(--quiet);
+  font-size: 13px;
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+.link:hover {
+  color: var(--ink);
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.result .buttons {
+  margin-top: 0;
+}
+
+/* Waveform: a recessed well the sound sits inside. */
+
+.wave {
+  position: relative;
+  overflow: hidden;
+  margin-top: 16px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--well);
+  box-shadow: var(--sink);
+}
+
+.wave svg {
+  display: block;
+  width: 100%;
+  height: 64px;
+}
+
+.wave path {
+  fill: var(--ink);
+}
+
+/* A hairline crosses the shape for exactly as long as the sound lasts. */
+.wave i {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 1px;
+  background: var(--quiet);
+  animation: cross var(--length) linear forwards;
+}
+
+@keyframes cross {
+  from {
+    left: 0;
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/*
+ * Slider: a raised pane sliding inside a recessed trough. The geometry is shared
+ * with the invisible input on top: both inset 4px, with a thumb as wide as the
+ * pane's smallest size, so the handle sits exactly under the pointer.
+ */
+
+.sliders {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+h3 + .sliders,
+.layer .sliders {
+  margin-top: 8px;
+}
+
+.slider {
+  --inset: 4px;
+  --smallest: 22px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  height: 46px;
+  padding-inline: 16px;
+  border-radius: 14px;
+  background: var(--well);
+  box-shadow: var(--sink);
+  user-select: none;
+}
+
+.fill {
+  position: absolute;
+  inset: var(--inset) auto var(--inset) var(--inset);
+  width: calc(var(--smallest) + var(--at) * (100% - 2 * var(--inset) - var(--smallest)));
+  border-radius: 10px;
+  background: var(--surface);
+  box-shadow: var(--raise-control);
+}
+
+/* The handle: a short upright bar near the pane's leading edge. */
+.fill::after {
+  content: "";
+  position: absolute;
+  inset: 25% 9px 25% auto;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--ink);
+  opacity: 0.55;
+  transition:
+    opacity 140ms var(--ease),
+    transform 140ms var(--ease);
+}
+
+.slider:hover .fill::after {
+  opacity: 1;
+}
+
+.slider:active .fill::after {
+  opacity: 1;
+  transform: scaleY(1.2);
+}
+
+.slider:has(input:focus-visible) {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.name,
+.reading {
+  position: relative;
+  font-weight: 500;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.reading {
+  font-variant-numeric: tabular-nums;
+}
+
+.slider input {
+  appearance: none;
+  position: absolute;
+  inset: 0 var(--inset);
+  width: calc(100% - 2 * var(--inset));
+  height: 100%;
+  margin: 0;
+  background: none;
+  opacity: 0;
+  cursor: grab;
+  touch-action: none;
+}
+
+.slider input:active {
+  cursor: grabbing;
+}
+
+.slider input::-webkit-slider-thumb {
+  appearance: none;
+  width: var(--smallest);
+  height: 46px;
+}
+
+.slider input::-moz-range-thumb {
+  width: var(--smallest);
+  height: 46px;
+  border: 0;
+}
+
+/* Details */
+
+details {
+  margin-top: 16px;
+}
+
+summary {
+  width: fit-content;
+  color: var(--quiet);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+pre {
+  counter-reset: line;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 14px 16px 14px 0;
+  border-radius: 9px;
+  background: var(--well);
+  box-shadow: var(--sink);
+  font:
+    400 12.5px / 1.7 ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+  color: var(--quiet);
+}
+
+pre::-webkit-scrollbar {
+  display: none;
+}
+
+code {
+  font: inherit;
+}
+
+.line {
+  counter-increment: line;
+}
+
+/* Line numbers live in CSS, so selecting or copying the code never picks them up. */
+.line::before {
+  content: counter(line);
+  display: inline-block;
+  width: 40px;
+  padding-right: 14px;
+  color: var(--faint);
+  opacity: 0.6;
+  text-align: right;
+  user-select: none;
+}
+
+/* Try it */
+
+.try {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  padding: 10px 16px;
+  color: var(--quiet);
+}
+
+.try > span {
+  color: var(--faint);
+}
+
+.try .button {
+  color: var(--ink);
+}
+
+.try a,
+.try label {
+  transition: color 120ms var(--ease);
+}
+
+.try a:hover,
+.try label:hover {
+  color: var(--ink);
+}
+
+.try label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.try input[type="checkbox"] {
+  accent-color: var(--ink);
+}
+
+.try .slider {
+  width: 180px;
+  height: 38px;
+  padding-inline: 14px;
+  color: var(--ink);
+}
+
+.try select {
+  cursor: pointer;
+}
+
+.try input[type="text"] {
+  flex: 1;
+  min-width: 100px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: var(--well);
+  box-shadow: var(--sink);
+  outline: none;
+}
+
+.try input[type="text"]::placeholder {
+  color: var(--faint);
+}
+
+/* Create */
+
+.create {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 12px;
+}
+
+.path {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Room for the cards' shadows, which scrolling containers would otherwise clip. */
+  margin: -4px;
+  padding: 4px;
+}
+
+.path::-webkit-scrollbar,
+.result::-webkit-scrollbar {
+  display: none;
+}
+
+.path .card {
+  padding: 22px clamp(18px, 3vw, 28px) 24px;
+}
+
+.path h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+
+.path h2 b {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: var(--raise-ink);
+}
+
+.optional {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--faint);
+}
+
+.lead {
+  margin: 6px 0 16px;
+  color: var(--quiet);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+  gap: 8px;
+}
+
+.tile {
+  display: grid;
+  gap: 1px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: left;
+  box-shadow: var(--raise-control);
+  transition:
+    box-shadow 140ms var(--ease),
+    transform 140ms var(--ease);
+}
+
+.tile:hover {
+  box-shadow: var(--raise-hover);
+  transform: translateY(-1px);
+}
+
+.tile:active {
+  box-shadow: var(--press);
+  transform: translateY(1px);
+}
+
+.tile strong {
+  font-weight: 500;
+}
+
+.tile small {
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: var(--quiet);
+}
+
+.tile[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+  box-shadow: var(--raise-ink);
+}
+
+.tile[aria-pressed="true"] small {
+  color: inherit;
+  opacity: 0.7;
+}
+
+.segments {
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 10px;
+  background: var(--well);
+  box-shadow: var(--sink);
+}
+
+.segments button {
+  flex: 1;
+  padding: 5px 4px;
+  border-radius: 7px;
+  color: var(--quiet);
+  transition: color 120ms var(--ease);
+}
+
+.segments button:hover {
+  color: var(--ink);
+}
+
+.segments button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: var(--raise-control);
+}
+
+.note {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--quiet);
+}
+
+.layers {
+  display: grid;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.layer {
+  padding: 4px 14px 14px;
+  border-radius: 12px;
+  background: var(--well);
+  box-shadow: var(--sink);
+}
+
+.layer h3 {
+  margin: 8px 0;
+}
+
+.result {
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 20px;
+}
+
+.result .play {
+  margin-top: 14px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.field input {
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: var(--well);
+  box-shadow: var(--sink);
+  font-size: 15px;
+  font-weight: 400;
+  outline: none;
+}
+
+.field input:focus {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.saved {
+  display: grid;
+  gap: 2px;
+  padding: 0;
+  list-style: none;
+}
+
+.saved li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.saved li > button:first-child {
+  flex: 1;
+  padding: 4px 0;
+  text-align: left;
+}
+
+@media (max-width: 960px) {
+  .app {
+    height: auto;
+    min-height: 100dvh;
+    padding-inline: 12px;
+  }
+
+  .create {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .stage,
+  .path,
+  .result {
+    overflow: visible;
+  }
+
+  .result {
+    grid-row: 1;
+  }
+}
+
+@media (max-width: 600px) {
+  .sliders.pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Tabs would wrap here and stop touching the panel, so they become a plain 3 by 2 group above it. */
+  .moods {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-bottom: 8px;
+    padding-inline: 0;
+  }
+
+  .moods button {
+    padding: 6px;
+    border-radius: 8px;
+  }
+
+  .moods button[aria-current="true"] {
+    box-shadow: var(--raise-control);
+  }
+
+  .moods button[aria-current="true"]::after {
+    display: none;
+  }
+
+  .sound {
+    padding: 20px;
+  }
+
+  .sound h1 {
+    font-size: 30px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wave i {
+    display: none;
+  }
+
+  .button,
+  .play,
+  .tile {
+    transition: none;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled),
+  .play:hover:not(:disabled),
+  .play:active:not(:disabled),
+  .tile:hover,
+  .tile:active {
+    transform: none;
+  }
+}

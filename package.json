@@ -1,0 +1,58 @@
+{
+  "name": "foley",
+  "version": "0.1.0",
+  "description": "Interface sounds you can shape. One config at the root, synthesized live, no audio files.",
+  "license": "MIT",
+  "type": "module",
+  "packageManager": "pnpm@10.28.1",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./react": {
+      "types": "./dist/react.d.ts",
+      "import": "./dist/react.js"
+    },
+    "./presets": {
+      "types": "./dist/presets.d.ts",
+      "import": "./dist/presets.js"
+    }
+  },
+  "scripts": {
+    "check": "tsc --noEmit && biome check . && vitest run",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "gains": "bun scripts/gains.ts && biome format --write src/gains.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "editor": "vite editor"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@biomejs/biome": "latest",
+    "@testing-library/react": "latest",
+    "@types/bun": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "fast-check": "latest",
+    "happy-dom": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "torph": "^0.1.3",
+    "typescript": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}
