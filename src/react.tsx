@@ -1,3 +1,5 @@
+"use client";
+
 import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 import { type Config, createSounds, type NameOf, type Sounds } from "./sounds.ts";
 

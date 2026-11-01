@@ -101,6 +101,26 @@ Attributes beat rules, for one-off exceptions:
 
 Disabled controls stay silent.
 
+## Next.js and server components
+
+`defaultRules` contains functions, and React cannot pass functions from a server component to a client component. Define the config in a client component, then use that component in your layout:
+
+```tsx
+// app/sounds.tsx
+"use client";
+
+import { defaultRules, defineSounds } from "foley";
+import { SoundRoot } from "foley/react";
+import { glass } from "foley/presets";
+import type { ReactNode } from "react";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+export function Sounds({ children }: { children: ReactNode }) {
+  return <SoundRoot config={config}>{children}</SoundRoot>;
+}
+```
+
 ## Not on React?
 
 The core has no framework in it:
@@ -155,7 +175,15 @@ pnpm foley editor   # open that build
 npx foley editor    # same command once the package is installed
 ```
 
-Installing the package copies `skills/foley` to `~/.agents/skills/foley` and prints that path. Agents that load skills from there can use it to navigate the package. pnpm skips dependency scripts until you allow them with `pnpm approve-builds`. If the install script did not run, `npx foley` installs the skill the first time it runs.
+## Agent skill
+
+The package includes a skill that helps coding agents navigate it. Installing the package does not touch your home directory. To add the skill, run:
+
+```sh
+npx foley skill
+```
+
+This copies it to `~/.agents/skills/foley`, replacing any copy already there.
 
 ## License
 

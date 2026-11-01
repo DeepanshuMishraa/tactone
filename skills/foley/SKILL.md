@@ -1,13 +1,6 @@
 ---
-
 name: foley
-description: >
-Navigate the Foley package, a library of synthesized interface sounds with
-a typed npm entry, a React binding, 36 presets, and an editor opened by
-`npx foley editor`. Use this whenever the work is in this repo or about
-Foley sounds, presets, rules, loudness, the editor, the CLI, or the
-published package, including when the user only says a sound is wrong,
-a preset should change, or the editor should open.
+description: Navigate the Foley package, a library of synthesized interface sounds with a typed npm entry, a React binding, 36 presets, and an editor opened by `npx foley editor`. Use this whenever the work is in this repo or about Foley sounds, presets, rules, loudness, the editor, the CLI, or the published package, including when the user only says a sound is wrong, a preset should change, or the editor should open.
 ---
 
 # Foley
@@ -56,11 +49,11 @@ A new style also needs a named export and a `sets` entry in `src/presets.ts`, a 
 
 `createSounds` is safe during SSR. It touches no browser API until `start` or `play`. `src/driver.ts` is the only module that builds Web Audio nodes. `src/render.ts` repeats the filter and envelope math without the room, because loudness and the waveform ignore that shared tail. Change the envelope or the filter in both, or the editor picture and the played sound drift apart.
 
-`src/react.tsx` stays a thin wrapper. The core has no React dependency. React is an optional peer.
+`src/react.tsx` stays a thin wrapper and starts with `"use client"`. The core has no React dependency. React is an optional peer.
 
 ## Editor and the npm command
 
-`pnpm editor` is the Vite dev server. `pnpm build` compiles the library, rewrites declaration specifiers, compiles `cli/cli.ts` to `dist/cli.js`, and bundles the editor to `dist/editor`. `pnpm foley editor` serves that bundle and opens it. The published package does the same through the `foley` bin, so `npx foley editor` works after install. `prepack` runs the build. Publish `dist/`, `skills/foley`, and `scripts/install-skill.mjs`.
+`pnpm editor` is the Vite dev server. `pnpm build` compiles the library, rewrites declaration specifiers, compiles `cli/cli.ts` to `dist/cli.js`, and bundles the editor to `dist/editor`. `pnpm foley editor` serves that bundle and opens it. The published package does the same through the `foley` bin, so `npx foley editor` works after install. `prepack` runs the build. Publish `dist/` and `skills/foley`. The package runs no install scripts.
 
 Source imports end in `.ts`. The JS emit rewrites those to `.js`. Declaration files need `scripts/declarations.mjs` as well, because TypeScript leaves `.ts` in the `.d.ts` and older resolvers reject that.
 
@@ -70,4 +63,4 @@ Source imports end in `.ts`. The JS emit rewrites those to `.js`. Declaration fi
 
 ## This copy
 
-Installing the package copies `skills/foley` to `~/.agents/skills/foley` and prints that path. pnpm skips dependency scripts until they are allowed, so `npx foley` installs the skill the first time it runs if the install script did not. Edit the file in the repo. The next install replaces the home-directory copy.
+`npx foley skill` copies `skills/foley` to `~/.agents/skills/foley` and prints that path. Nothing else writes there. Edit the file in the repo. The next `npx foley skill` replaces the home-directory copy.

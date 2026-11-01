@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import { spawn } from "node:child_process";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,9 +9,9 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 const root = fileURLToPath(new URL("..", import.meta.url));
 
-function installInto(home: string, args: readonly string[] = []) {
+function foley(home: string, args: readonly string[]) {
   return new Promise<{ readonly code: number; readonly stdout: string; readonly stderr: string }>((resolve, reject) => {
-    const child = spawn(process.execPath, ["scripts/install-skill.mjs", ...args], {
+    const child = spawn(process.execPath, ["cli/cli.ts", ...args], {
       cwd: root,
       env: { ...process.env, HOME: home, USERPROFILE: home },
     });
@@ -32,7 +32,7 @@ function installInto(home: string, args: readonly string[] = []) {
   });
 }
 
-describe("postinstall skill", () => {
+describe("foley skill", () => {
   let home = "";
 
   beforeEach(async () => {
@@ -44,21 +44,51 @@ describe("postinstall skill", () => {
   });
 
   it("copies the skill into ~/.agents/skills and says where it landed", async () => {
-    const result = await installInto(home);
+    const result = await foley(home, ["skill"]);
     const installed = await readFile(join(home, ".agents", "skills", "foley", "SKILL.md"), "utf8");
     const shipped = await readFile(join(root, "skills", "foley", "SKILL.md"), "utf8");
 
-    expect(result.code).toBe(0);
     expect(result.stderr).toBe("");
+    expect(result.code).toBe(0);
     expect(installed).toBe(shipped);
     expect(result.stdout).toContain(join(home, ".agents", "skills", "foley"));
-    expect(result.stdout).toContain("navigate this package");
   });
 
-  it("stays quiet when the installed skill is already current", async () => {
-    await installInto(home);
-    const again = await installInto(home, ["--if-changed"]);
-    expect(again.code).toBe(0);
-    expect(again.stdout).toBe("");
+  it("explains the failure and exits non-zero when the home directory cannot be written", async () => {
+    await writeFile(join(home, ".agents"), "a file where the directory should go");
+    const result = await foley(home, ["skill"]);
+
+    expect(result.code).toBe(1);
+    expect(result.stderr).toContain("Could not install the Foley skill");
+    expect(result.stderr).toContain("skills/foley");
+    expect(result.stderr).not.toContain("    at ");
+  });
+
+  it("leaves the home directory alone unless asked", async () => {
+    const result = await foley(home, ["--help"]);
+
+    expect(result.code).toBe(0);
+    await expect(access(join(home, ".agents"))).rejects.toThrow();
+  });
+
+  it("keeps a local edit when another command runs", async () => {
+    const installed = join(home, ".agents", "skills", "foley");
+    await mkdir(installed, { recursive: true });
+    await writeFile(join(installed, "SKILL.md"), "my edit");
+    await foley(home, ["--help"]);
+
+    expect(await readFile(join(installed, "SKILL.md"), "utf8")).toBe("my edit");
+  });
+});
+
+describe("shipped skill", () => {
+  it("has frontmatter a strict YAML parser accepts", async () => {
+    const source = await readFile(join(root, "skills", "foley", "SKILL.md"), "utf8");
+    const frontmatter = /^---\nname: foley\ndescription: (.+)\n---\n/.exec(source);
+
+    expect(frontmatter).not.toBeNull();
+    // A plain YAML scalar ends at ": " or " #", and cannot start with an indicator such as ">".
+    expect(frontmatter?.[1]).toMatch(/^[A-Za-z]/);
+    expect(frontmatter?.[1]).not.toMatch(/: | #/);
   });
 });

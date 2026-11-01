@@ -3,13 +3,15 @@
 /**
  * `npx foley` and `npx foley editor` serve the built editor and open it.
  * The assets live next to this file, at dist/editor, after `pnpm build`.
+ * `npx foley skill` copies the agent skill to ~/.agents/skills/foley.
  */
 
-import { spawn, spawnSync } from "node:child_process";
+import { spawn } from "node:child_process";
 import { realpathSync } from "node:fs";
-import { readFile, realpath, stat } from "node:fs/promises";
+import { cp, mkdir, readFile, realpath, stat } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
-import { extname, join, sep } from "node:path";
+import { homedir } from "node:os";
+import { dirname, extname, join, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const TYPES: Record<string, string> = {
@@ -27,6 +29,7 @@ const TYPES: Record<string, string> = {
 };
 
 export type CliArgs = {
+  readonly command: "editor" | "skill";
   readonly help: boolean;
   readonly open: boolean;
   readonly port: number | undefined;
@@ -44,6 +47,7 @@ export function editorDirectory(): string {
 }
 
 export function parseArgs(argv: readonly string[]): CliArgs {
+  let command: CliArgs["command"] = "editor";
   let help = false;
   let open = true;
   let port: number | undefined;
@@ -53,6 +57,10 @@ export function parseArgs(argv: readonly string[]): CliArgs {
     const arg = args[index];
     if (arg === undefined) continue;
     if (arg === "editor") continue;
+    if (arg === "skill") {
+      command = "skill";
+      continue;
+    }
     if (arg === "--help" || arg === "-h") {
       help = true;
       continue;
@@ -66,15 +74,15 @@ export function parseArgs(argv: readonly string[]): CliArgs {
       if (arg === "--port") index += 1;
       const value = Number(raw);
       if (raw === undefined || !Number.isInteger(value) || value < 0 || value > 65535) {
-        return { help: false, open: true, port: undefined, error: `Expected a port from 0 to 65535, got ${raw ?? "(missing)"}.` };
+        return { command, help: false, open: true, port: undefined, error: `Expected a port from 0 to 65535, got ${raw ?? "(missing)"}.` };
       }
       port = value;
       continue;
     }
-    return { help: false, open: true, port: undefined, error: `Unknown argument "${arg}". Run \`foley --help\` for usage.` };
+    return { command, help: false, open: true, port: undefined, error: `Unknown argument "${arg}". Run \`foley --help\` for usage.` };
   }
 
-  return { help, open, port, error: undefined };
+  return { command, help, open, port, error: undefined };
 }
 
 /** Resolves a request path to a file inside `root`. Rejects paths that leave the directory, including through symlinks. */
@@ -147,6 +155,15 @@ export function serveEditor(options: { readonly root: string; readonly port?: nu
   });
 }
 
+/** What to tell someone when the editor server could not start. */
+export function serveFailure(error: unknown, port: number | undefined): string {
+  if (error instanceof Error && "code" in error && error.code === "EADDRINUSE") {
+    return `Port ${port} is already in use, so the Foley editor did not start. Pass another with --port <n>, or leave out --port to use a free one.`;
+  }
+  const reason = error instanceof Error ? error.message : "The reason was not reported.";
+  return `The Foley editor did not start. ${reason}`;
+}
+
 function closeServer(server: Server): Promise<void> {
   return new Promise((resolve, reject) => {
     server.close((error) => {
@@ -168,17 +185,29 @@ function openBrowser(url: string) {
 }
 
 const HELP = `Usage: foley [editor] [--port <n>] [--no-open]
+       foley skill
 
 Serves the Foley editor on localhost and opens it in your browser.
-\`foley\` and \`foley editor\` do the same thing.`;
+\`foley\` and \`foley editor\` do the same thing.
 
-function installBundledSkill() {
-  const script = fileURLToPath(new URL("../scripts/install-skill.mjs", import.meta.url));
-  spawnSync(process.execPath, [script, "--if-changed"], { stdio: "inherit" });
+\`foley skill\` copies the agent skill to ~/.agents/skills/foley, replacing any copy already there.`;
+
+async function installSkill() {
+  const source = fileURLToPath(new URL("../skills/foley/", import.meta.url));
+  const destination = join(homedir(), ".agents", "skills", "foley");
+  try {
+    await mkdir(dirname(destination), { recursive: true });
+    await cp(source, destination, { recursive: true, force: true });
+    console.log(`Foley installed its agent skill at ${destination}.`);
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : "The reason was not reported.";
+    console.error(`Could not install the Foley skill at ${destination}. ${reason}`);
+    console.error("The package itself still works. To install the skill by hand, copy skills/foley from the package to that path.");
+    process.exitCode = 1;
+  }
 }
 
 async function main() {
-  installBundledSkill();
   const parsed = parseArgs(process.argv);
   if (parsed.error !== undefined) {
     console.error(parsed.error);
@@ -187,6 +216,10 @@ async function main() {
   }
   if (parsed.help) {
     console.log(HELP);
+    return;
+  }
+  if (parsed.command === "skill") {
+    await installSkill();
     return;
   }
 
@@ -200,9 +233,14 @@ async function main() {
     return;
   }
 
-  const server = await serveEditor({ root, ...(parsed.port === undefined ? {} : { port: parsed.port }) });
-  console.log(`Foley editor at ${server.url}`);
-  if (parsed.open) openBrowser(server.url);
+  try {
+    const server = await serveEditor({ root, ...(parsed.port === undefined ? {} : { port: parsed.port }) });
+    console.log(`Foley editor at ${server.url}`);
+    if (parsed.open) openBrowser(server.url);
+  } catch (error) {
+    console.error(serveFailure(error, parsed.port));
+    process.exitCode = 1;
+  }
 }
 
 function invokedDirectly(): boolean {

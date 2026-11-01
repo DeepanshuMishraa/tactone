@@ -4,7 +4,7 @@ import { mkdir, mkdtemp, readFile, realpath, rm, symlink, writeFile } from "node
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { fileInRoot, parseArgs, serveEditor } from "../cli/cli.ts";
+import { fileInRoot, parseArgs, serveEditor, serveFailure } from "../cli/cli.ts";
 
 type PackageJson = {
   readonly bin: { readonly foley: string };
@@ -51,11 +51,21 @@ const pkg = readPackage(JSON.parse(await readFile(new URL("../package.json", imp
 
 describe("package entry points", () => {
   it("publishes the typed entries and the foley command", () => {
-    expect(pkg.files).toEqual(["dist", "skills", "scripts/install-skill.mjs"]);
+    expect(pkg.files).toEqual(["dist", "skills"]);
     expect(pkg.bin.foley).toBe("./dist/cli.js");
     expect(pkg.exports["."]).toMatchObject({ types: "./dist/index.d.ts", import: "./dist/index.js" });
     expect(pkg.exports["./react"]).toMatchObject({ types: "./dist/react.d.ts", import: "./dist/react.js" });
     expect(pkg.exports["./presets"]).toMatchObject({ types: "./dist/presets.d.ts", import: "./dist/presets.js" });
+  });
+
+  it("runs nothing at install time", async () => {
+    const manifest = await readFile(new URL("../package.json", import.meta.url), "utf8");
+    expect(manifest).not.toMatch(/"(preinstall|install|postinstall)":/);
+  });
+
+  it("marks the React entry as client code", async () => {
+    const source = await readFile(new URL("../src/react.tsx", import.meta.url), "utf8");
+    expect(source.startsWith('"use client";\n')).toBe(true);
   });
 });
 
@@ -73,6 +83,34 @@ describe("parseArgs", () => {
   it("rejects a bad port and unknown arguments", () => {
     expect(parseArgs(["node", "foley", "--port", "nope"]).error).toMatch(/port/);
     expect(parseArgs(["node", "foley", "build"]).error).toMatch(/Unknown argument/);
+  });
+
+  it("reads the skill command and defaults to the editor", () => {
+    expect(parseArgs(["node", "foley", "skill"])).toMatchObject({ command: "skill", error: undefined });
+    expect(parseArgs(["node", "foley"])).toMatchObject({ command: "editor" });
+    expect(parseArgs(["node", "foley", "editor"])).toMatchObject({ command: "editor" });
+  });
+});
+
+describe("serveFailure", () => {
+  it("names a busy port and how to recover", async () => {
+    const root = await mkdtemp(join(tmpdir(), "foley-busy-"));
+    const first = await serveEditor({ root, port: 0 });
+    const port = Number(new URL(first.url).port);
+    try {
+      const error = await serveEditor({ root, port }).catch((reason: unknown) => reason);
+      const message = serveFailure(error, port);
+      expect(message).toContain(`Port ${port} is already in use`);
+      expect(message).toContain("--port");
+    } finally {
+      await first.close();
+      await rm(root, { recursive: true, force: true });
+    }
+  });
+
+  it("passes on the reason for any other failure", () => {
+    expect(serveFailure(new Error("permission denied"), 80)).toContain("permission denied");
+    expect(serveFailure("odd", undefined)).toContain("The reason was not reported");
   });
 });
 
