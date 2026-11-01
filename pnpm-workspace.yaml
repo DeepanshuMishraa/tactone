@@ -1,5 +1,8 @@
 strictDepBuilds: true
 dangerouslyAllowAllBuilds: false
-allowBuilds: []
+allowBuilds: {}
 minimumReleaseAge: 4320
+minimumReleaseAgeExclude:
+  - rolldown@1.2.16
+  - ws@8.22.1
 blockExoticSubdeps: true
