@@ -1,0 +1,214 @@
+#!/usr/bin/env node
+
+/**
+ * `npx foley` and `npx foley editor` serve the built editor and open it.
+ * The assets live next to this file, at dist/editor, after `pnpm build`.
+ */
+
+import { spawn } from "node:child_process";
+import { realpathSync } from "node:fs";
+import { readFile, realpath, stat } from "node:fs/promises";
+import { createServer, type Server } from "node:http";
+import { extname, join, sep } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const TYPES: Record<string, string> = {
+  ".html": "text/html; charset=utf-8",
+  ".js": "text/javascript; charset=utf-8",
+  ".css": "text/css; charset=utf-8",
+  ".svg": "image/svg+xml",
+  ".json": "application/json",
+  ".map": "application/json",
+  ".woff": "font/woff",
+  ".woff2": "font/woff2",
+  ".png": "image/png",
+  ".webp": "image/webp",
+  ".ico": "image/x-icon",
+};
+
+export type CliArgs = {
+  readonly help: boolean;
+  readonly open: boolean;
+  readonly port: number | undefined;
+  readonly error: string | undefined;
+};
+
+export type EditorServer = {
+  readonly url: string;
+  readonly close: () => Promise<void>;
+};
+
+/** Directory of the built editor, beside the compiled CLI. */
+export function editorDirectory(): string {
+  return fileURLToPath(new URL("./editor/", import.meta.url));
+}
+
+export function parseArgs(argv: readonly string[]): CliArgs {
+  let help = false;
+  let open = true;
+  let port: number | undefined;
+  const args = argv.slice(2);
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    if (arg === undefined) continue;
+    if (arg === "editor") continue;
+    if (arg === "--help" || arg === "-h") {
+      help = true;
+      continue;
+    }
+    if (arg === "--no-open") {
+      open = false;
+      continue;
+    }
+    if (arg === "--port" || arg.startsWith("--port=")) {
+      const raw = arg === "--port" ? args[index + 1] : arg.slice("--port=".length);
+      if (arg === "--port") index += 1;
+      const value = Number(raw);
+      if (raw === undefined || !Number.isInteger(value) || value < 0 || value > 65535) {
+        return { help: false, open: true, port: undefined, error: `Expected a port from 0 to 65535, got ${raw ?? "(missing)"}.` };
+      }
+      port = value;
+      continue;
+    }
+    return { help: false, open: true, port: undefined, error: `Unknown argument "${arg}". Run \`foley --help\` for usage.` };
+  }
+
+  return { help, open, port, error: undefined };
+}
+
+/** Resolves a request path to a file inside `root`. Rejects paths that leave the directory, including through symlinks. */
+export async function fileInRoot(root: string, urlPath: string): Promise<string | null> {
+  let pathname: string;
+  try {
+    pathname = decodeURIComponent(new URL(urlPath, "http://127.0.0.1").pathname);
+  } catch {
+    return null;
+  }
+  if (pathname.includes("\0")) return null;
+
+  const relative = pathname === "/" ? "index.html" : pathname.replace(/^\/+/, "");
+  let rootReal: string;
+  try {
+    rootReal = await realpath(root);
+  } catch {
+    return null;
+  }
+
+  const candidate = join(rootReal, relative);
+  try {
+    const fileReal = await realpath(candidate);
+    const rootPrefix = rootReal.endsWith(sep) ? rootReal : rootReal + sep;
+    if (fileReal !== rootReal && !fileReal.startsWith(rootPrefix)) return null;
+    const info = await stat(fileReal);
+    return info.isFile() ? fileReal : null;
+  } catch {
+    return null;
+  }
+}
+
+export function serveEditor(options: { readonly root: string; readonly port?: number; readonly hostname?: string }): Promise<EditorServer> {
+  const hostname = options.hostname ?? "127.0.0.1";
+  const server = createServer((request, response) => {
+    void fileInRoot(options.root, request.url ?? "/")
+      .then(async (file) => {
+        if (file === null) {
+          response.writeHead(404, { "content-type": "text/plain; charset=utf-8" });
+          response.end("Not found.");
+          return;
+        }
+        const body = await readFile(file);
+        response.writeHead(200, {
+          "content-type": TYPES[extname(file)] ?? "application/octet-stream",
+          "cache-control": "no-cache",
+        });
+        response.end(body);
+      })
+      .catch((error: unknown) => {
+        response.writeHead(500, { "content-type": "text/plain; charset=utf-8" });
+        response.end(error instanceof Error ? error.message : "The editor failed to read a file.");
+      });
+  });
+
+  const port = options.port ?? 0;
+  return new Promise((resolve, reject) => {
+    server.once("error", reject);
+    server.listen(port, hostname, () => {
+      const address = server.address();
+      if (address === null || typeof address === "string") {
+        reject(new Error("The Foley editor server did not bind to a TCP port."));
+        return;
+      }
+      resolve({
+        url: `http://${hostname}:${address.port}/`,
+        close: () => closeServer(server),
+      });
+    });
+  });
+}
+
+function closeServer(server: Server): Promise<void> {
+  return new Promise((resolve, reject) => {
+    server.close((error) => {
+      if (error !== undefined) reject(error);
+      else resolve();
+    });
+  });
+}
+
+function openBrowser(url: string) {
+  const child =
+    process.platform === "win32"
+      ? spawn("cmd", ["/c", "start", "", url], { stdio: "ignore", detached: true, windowsHide: true })
+      : spawn(process.platform === "darwin" ? "open" : "xdg-open", [url], { stdio: "ignore", detached: true });
+  child.on("error", () => {
+    console.log(`Open ${url} in your browser.`);
+  });
+  child.unref();
+}
+
+const HELP = `Usage: foley [editor] [--port <n>] [--no-open]
+
+Serves the Foley editor on localhost and opens it in your browser.
+\`foley\` and \`foley editor\` do the same thing.`;
+
+async function main() {
+  const parsed = parseArgs(process.argv);
+  if (parsed.error !== undefined) {
+    console.error(parsed.error);
+    process.exitCode = 1;
+    return;
+  }
+  if (parsed.help) {
+    console.log(HELP);
+    return;
+  }
+
+  const root = editorDirectory();
+  try {
+    await stat(join(root, "index.html"));
+  } catch {
+    console.error(`Could not find the Foley editor at ${root}.`);
+    console.error("From the foley repo, run `pnpm build`. If you installed the package, reinstall it so the build is included.");
+    process.exitCode = 1;
+    return;
+  }
+
+  const server = await serveEditor({ root, ...(parsed.port === undefined ? {} : { port: parsed.port }) });
+  console.log(`Foley editor at ${server.url}`);
+  if (parsed.open) openBrowser(server.url);
+}
+
+function invokedDirectly(): boolean {
+  const entry = process.argv[1];
+  if (entry === undefined) return false;
+  try {
+    return realpathSync(fileURLToPath(import.meta.url)) === realpathSync(entry);
+  } catch {
+    return false;
+  }
+}
+
+if (invokedDirectly()) {
+  void main();
+}

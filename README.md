@@ -14,7 +14,7 @@ const config = defineSounds({ sounds: glass, rules: defaultRules });
 </SoundRoot>;
 ```
 
-Every button, link, checkbox, slider, select and text field now sounds right. To audition all of them, run `pnpm editor`.
+Every button, link, checkbox, slider, select and text field now sounds right. To audition all of them, run `pnpm editor` in this repo, or `npx foley editor` from an install.
 
 ## Presets
 
@@ -116,7 +116,7 @@ sounds.play("success");
 
 ## Build from scratch
 
-The easiest way is the Create page in `pnpm editor`: stack parts, shape them with plain sliders, save them in your browser, and copy the code.
+The easiest way is the Create page in the editor (`pnpm editor`, or `npx foley editor` from an install). Stack parts, shape them with plain sliders, save them in your browser, and copy the code.
 
 In code, a sound is an object of tone and noise layers, which you can write by hand or save as JSON:
 
@@ -147,9 +147,12 @@ Your app owns preferences. `setVolume` and `setMuted` apply a setting, and Foley
 ## Develop
 
 ```sh
-pnpm check   # typecheck, lint, tests
+pnpm check   # typecheck, lint, tests, and the published type entry points
 pnpm gains   # re-measure every preset after changing src/design.ts (runs on Bun)
-pnpm editor  # the visual editor
+pnpm editor  # the visual editor, with live reload
+pnpm build          # library, CLI, and the editor bundle in dist/
+pnpm foley editor   # open that build
+npx foley editor    # same command once the package is installed
 ```
 
 ## License

@@ -9,27 +9,38 @@
   "files": [
     "dist"
   ],
+  "bin": {
+    "foley": "./dist/cli.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./react": {
       "types": "./dist/react.d.ts",
-      "import": "./dist/react.js"
+      "import": "./dist/react.js",
+      "default": "./dist/react.js"
     },
     "./presets": {
       "types": "./dist/presets.d.ts",
-      "import": "./dist/presets.js"
+      "import": "./dist/presets.js",
+      "default": "./dist/presets.js"
     }
   },
   "scripts": {
-    "check": "tsc --noEmit && biome check . && vitest run",
+    "check": "tsc --noEmit && biome check . && vitest run && pnpm check:package",
+    "check:package": "tsc -p tsconfig.build.json && node scripts/declarations.mjs && tsc -p tsconfig.cli.json && tsc -p test/consumer/tsconfig.json",
     "format": "biome check --write .",
     "test": "vitest run",
     "gains": "bun scripts/gains.ts && biome format --write src/gains.ts",
-    "build": "tsc -p tsconfig.build.json",
-    "editor": "vite editor"
+    "build": "tsc -p tsconfig.build.json && node scripts/declarations.mjs && tsc -p tsconfig.cli.json && vite build editor",
+    "prepack": "pnpm build",
+    "editor": "vite editor",
+    "foley": "node dist/cli.js"
   },
   "peerDependencies": {
     "react": ">=18"

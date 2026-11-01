@@ -17,5 +17,6 @@
     "allowImportingTsExtensions": true,
     "types": ["bun"]
   },
-  "include": ["src", "test", "scripts", "editor"]
+  "include": ["src", "test", "scripts", "editor", "cli"],
+  "exclude": ["node_modules", "dist", "test/consumer"]
 }
