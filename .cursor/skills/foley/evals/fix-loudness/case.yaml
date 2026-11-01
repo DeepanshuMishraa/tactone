@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: fix-loudness
+expected_outcome: |
+  The answer says to run pnpm gains, which rewrites src/gains.ts from the new
+  design. It does not recommend editing src/gains.ts by hand. It can mention
+  TIER_LOUDNESS in src/design.ts as the target the test enforces.

@@ -155,6 +155,8 @@ pnpm foley editor   # open that build
 npx foley editor    # same command once the package is installed
 ```
 
+Installing the package copies `skills/foley` to `~/.agents/skills/foley` and prints that path. Agents that load skills from there can use it to navigate the package. pnpm skips dependency scripts until you allow them with `pnpm approve-builds`. If the install script did not run, `npx foley` installs the skill the first time it runs.
+
 ## License
 
 MIT

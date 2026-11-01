@@ -5,7 +5,7 @@
  * The assets live next to this file, at dist/editor, after `pnpm build`.
  */
 
-import { spawn } from "node:child_process";
+import { spawn, spawnSync } from "node:child_process";
 import { realpathSync } from "node:fs";
 import { readFile, realpath, stat } from "node:fs/promises";
 import { createServer, type Server } from "node:http";
@@ -172,7 +172,13 @@ const HELP = `Usage: foley [editor] [--port <n>] [--no-open]
 Serves the Foley editor on localhost and opens it in your browser.
 \`foley\` and \`foley editor\` do the same thing.`;
 
+function installBundledSkill() {
+  const script = fileURLToPath(new URL("../scripts/install-skill.mjs", import.meta.url));
+  spawnSync(process.execPath, [script, "--if-changed"], { stdio: "inherit" });
+}
+
 async function main() {
+  installBundledSkill();
   const parsed = parseArgs(process.argv);
   if (parsed.error !== undefined) {
     console.error(parsed.error);

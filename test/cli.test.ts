@@ -51,7 +51,7 @@ const pkg = readPackage(JSON.parse(await readFile(new URL("../package.json", imp
 
 describe("package entry points", () => {
   it("publishes the typed entries and the foley command", () => {
-    expect(pkg.files).toEqual(["dist"]);
+    expect(pkg.files).toEqual(["dist", "skills", "scripts/install-skill.mjs"]);
     expect(pkg.bin.foley).toBe("./dist/cli.js");
     expect(pkg.exports["."]).toMatchObject({ types: "./dist/index.d.ts", import: "./dist/index.js" });
     expect(pkg.exports["./react"]).toMatchObject({ types: "./dist/react.d.ts", import: "./dist/react.js" });

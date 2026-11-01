@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: add-a-purpose
+expected_outcome: |
+  The answer names src/design.ts (PURPOSES and GESTURES, action tier), the set()
+  object in src/presets.ts, and pnpm gains before tests. It leaves defaultRules
+  alone because ordinary clicks should not play confirm. It does not tell the
+  reader to hand-edit src/gains.ts.

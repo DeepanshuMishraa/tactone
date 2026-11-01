@@ -7,7 +7,9 @@
   "packageManager": "pnpm@10.28.1",
   "sideEffects": false,
   "files": [
-    "dist"
+    "dist",
+    "skills",
+    "scripts/install-skill.mjs"
   ],
   "bin": {
     "foley": "./dist/cli.js"
@@ -40,7 +42,8 @@
     "build": "tsc -p tsconfig.build.json && node scripts/declarations.mjs && tsc -p tsconfig.cli.json && vite build editor",
     "prepack": "pnpm build",
     "editor": "vite editor",
-    "foley": "node dist/cli.js"
+    "foley": "node dist/cli.js",
+    "postinstall": "node scripts/install-skill.mjs"
   },
   "peerDependencies": {
     "react": ">=18"

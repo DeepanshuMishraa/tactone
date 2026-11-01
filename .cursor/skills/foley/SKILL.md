@@ -1,0 +1,1 @@
+../../../skills/foley/SKILL.md
