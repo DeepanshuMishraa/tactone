@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Docs · Tactone</title>
+    <meta name="description" content="Install Tactone, pick a preset, write rules, and build your own interface sounds." />
+    <script>
+      // Applies a saved theme before first paint. site/theme.ts owns it after that.
+      try {
+        const theme = localStorage.getItem("tactone.site.theme");
+        if (theme === "light" || theme === "dark") document.documentElement.dataset.theme = theme;
+      } catch {}
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="../docs.tsx"></script>
+  </body>
+</html>

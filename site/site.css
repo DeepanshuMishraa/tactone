@@ -1,0 +1,901 @@
+/*
+ * The site wears the editor's skin: its tokens, cards, buttons and code wells
+ * come from editor/styles.css. This file only lays out the pages around them.
+ */
+
+html,
+body,
+#root {
+  height: auto;
+}
+
+body {
+  font-size: 15px;
+}
+
+.site {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding-inline: 16px;
+}
+
+.site-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding: 18px 8px 0;
+}
+
+.site-bar nav {
+  display: flex;
+  gap: 4px;
+}
+
+.site-bar nav a,
+.site-footer a {
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: var(--quiet);
+  transition:
+    color 120ms var(--ease),
+    background-color 120ms var(--ease);
+}
+
+.site-bar nav a:hover,
+.site-footer a:hover {
+  background: var(--well);
+  color: var(--ink);
+}
+
+.site-bar nav a[aria-current="page"] {
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 500;
+  box-shadow: var(--raise-control);
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 8px;
+  margin-top: auto;
+  padding: 48px 0 28px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.site-footer span {
+  margin-right: 6px;
+}
+
+/* Landing */
+
+.home {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.hero {
+  padding: clamp(56px, 12vw, 120px) 8px 28px;
+  text-align: center;
+}
+
+.hero h1 {
+  max-width: 15ch;
+  margin-inline: auto;
+  font-size: clamp(36px, 7vw, 56px);
+  font-weight: 500;
+  line-height: 1.04;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+.lead {
+  max-width: 54ch;
+  margin: 16px auto 0;
+  color: var(--quiet);
+  font-size: 16px;
+  text-wrap: pretty;
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.hero-actions .primary {
+  padding: 9px 18px;
+}
+
+.aside {
+  margin-top: 22px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.picker {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.picker .moods {
+  justify-content: center;
+}
+
+.picker .presets {
+  padding: 18px;
+}
+
+.picker-sound {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+h2.picker-name {
+  margin: 0;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+.picker-sound .play {
+  flex: none;
+  margin-top: 0;
+}
+
+.picker .choices {
+  margin-top: 14px;
+}
+
+.section {
+  padding-top: clamp(48px, 9vw, 88px);
+  text-align: center;
+}
+
+h2.eyebrow {
+  margin-bottom: 10px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+h3.title {
+  margin: 0;
+  font-size: clamp(26px, 4.5vw, 34px);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.section .lead {
+  margin-bottom: 24px;
+}
+
+.section > .command {
+  margin-inline: auto;
+}
+
+.closing .hero-actions {
+  margin-top: 22px;
+}
+
+.steps,
+.points {
+  display: grid;
+  gap: 10px;
+  text-align: left;
+}
+
+.steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: 18px 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.points {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 4px;
+}
+
+.point {
+  padding: 18px 20px 20px;
+}
+
+.point b {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 12px;
+  font-weight: 500;
+  box-shadow: var(--raise-ink);
+}
+
+.point h3 {
+  margin: 12px 0 4px;
+  font-size: 15px;
+}
+
+.point b + h3 {
+  margin-top: 14px;
+}
+
+.point p {
+  color: var(--quiet);
+  font-size: 14px;
+}
+
+/* Code and commands */
+
+.site-code {
+  text-align: left;
+}
+
+.site-code header {
+  min-height: 30px;
+  padding-bottom: 8px;
+}
+
+.site-code .code-toggle {
+  color: var(--quiet);
+  font-size: 13px;
+}
+
+.command {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 100%;
+  padding: 4px 4px 4px 14px;
+  border-radius: 12px;
+  background: var(--well);
+  box-shadow: var(--sink);
+}
+
+.command code {
+  overflow: hidden;
+  font:
+    400 13px / 1.4 ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.command code span {
+  color: var(--faint);
+  user-select: none;
+}
+
+/* Docs */
+
+.docs {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 48px;
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
+  padding-top: 40px;
+}
+
+.toc {
+  position: sticky;
+  top: 24px;
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  height: fit-content;
+  padding-left: 8px;
+}
+
+.toc a {
+  padding: 4px 10px;
+  border-radius: 7px;
+  color: var(--quiet);
+  font-size: 13.5px;
+  transition:
+    color 120ms var(--ease),
+    background-color 120ms var(--ease);
+}
+
+.toc a:hover {
+  background: var(--well);
+  color: var(--ink);
+}
+
+.doc-body {
+  max-width: 720px;
+  min-width: 0;
+}
+
+.doc-intro h1 {
+  font-size: clamp(34px, 6vw, 44px);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.doc-intro .lead {
+  margin-inline: 0;
+}
+
+.doc {
+  display: grid;
+  gap: 14px;
+  padding-top: 48px;
+  scroll-margin-top: 12px;
+}
+
+.doc h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.doc h2 a:hover {
+  color: var(--quiet);
+}
+
+.doc p,
+.doc li {
+  color: var(--quiet);
+  text-wrap: pretty;
+}
+
+.doc ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 18px;
+}
+
+.doc :not(pre) > code,
+.table code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--well);
+  box-shadow: var(--sink);
+  color: var(--ink);
+  font:
+    400 12.5px / 1.5 ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+}
+
+.doc .command {
+  justify-self: start;
+}
+
+.doc .command code {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.table {
+  overflow-x: auto;
+  padding: 6px 8px;
+}
+
+.table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.table th {
+  padding: 8px 10px;
+  color: var(--faint);
+  font-size: 12.5px;
+  font-weight: 400;
+}
+
+.table td {
+  padding: 9px 10px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+.table td:first-child {
+  width: 120px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.table td:last-child {
+  color: var(--quiet);
+}
+
+.table td code {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+}
+
+@media (max-width: 760px) {
+  .docs {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+    padding-top: 24px;
+  }
+
+  .toc {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    padding-left: 0;
+  }
+
+  .toc a {
+    padding: 4px 10px;
+    background: var(--well);
+    box-shadow: var(--sink);
+  }
+}
+
+@media (max-width: 600px) {
+  .steps,
+  .points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .picker-sound {
+    flex-direction: column;
+  }
+
+  .try .slider {
+    width: 100%;
+  }
+}
+
+/*
+ * Motion. Everything here is a transition on transform, opacity or filter, so it
+ * stays interruptible and composited. Reduced motion turns all of it off below.
+ */
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* The hero arrives in pieces, top to bottom. */
+[data-enter] {
+  animation: enter 720ms var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 60ms);
+}
+
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(4px);
+  }
+}
+
+/* Sections settle in once as they scroll into view, and their cards follow one by one. */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  filter: blur(4px);
+  transition:
+    opacity 700ms var(--ease),
+    transform 700ms var(--ease),
+    filter 700ms var(--ease);
+}
+
+[data-reveal][data-in] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+[data-reveal] .steps > .point,
+[data-reveal] .points > .point {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 600ms var(--ease),
+    transform 600ms var(--ease),
+    box-shadow 200ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 80ms + 140ms);
+}
+
+[data-reveal][data-in] .steps > .point,
+[data-reveal][data-in] .points > .point {
+  opacity: 1;
+  transform: none;
+}
+
+/* Cards lift toward the light when you point at them, with no delay left over from the reveal. */
+[data-reveal][data-in] .steps > .point:hover,
+[data-reveal][data-in] .points > .point:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--raise-hover);
+  transition-delay: 0ms;
+}
+
+.point b {
+  transition: transform 260ms var(--ease);
+}
+
+.point:hover b {
+  transform: rotate(-8deg) scale(1.06);
+}
+
+/* Small controls give under the finger. */
+.moods button,
+.preset-grid button,
+.choices button,
+.pill,
+.toc a,
+.site-bar nav a,
+.site-footer a,
+.theme-toggle {
+  transition:
+    color 120ms var(--ease),
+    background-color 120ms var(--ease),
+    box-shadow 140ms var(--ease),
+    scale 140ms var(--ease);
+}
+
+.moods button:active,
+.preset-grid button:active,
+.choices button:active,
+.pill:active,
+.toc a:active,
+.site-bar nav a:active,
+.site-footer a:active,
+.theme-toggle:active {
+  scale: 0.96;
+}
+
+/* Get started: the arrow leans toward where it goes. */
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.arrow {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: translate 220ms var(--ease);
+}
+
+.cta:hover .arrow {
+  translate: 3px 0;
+}
+
+/* Copy and its check share a spot and cross-fade, so the swap reads as one icon changing its mind. */
+.copy-icons {
+  position: relative;
+  display: inline-grid;
+  width: 14px;
+  height: 14px;
+}
+
+.copy-icons svg {
+  grid-area: 1 / 1;
+  transition:
+    opacity 200ms cubic-bezier(0.2, 0, 0, 1),
+    scale 200ms cubic-bezier(0.2, 0, 0, 1),
+    filter 200ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.copy-icons svg:last-child,
+[data-copied] .copy-icons svg:first-child {
+  opacity: 0;
+  scale: 0.25;
+  filter: blur(4px);
+}
+
+[data-copied] .copy-icons svg:last-child {
+  opacity: 1;
+  scale: 1;
+  filter: none;
+}
+
+.command code {
+  user-select: all;
+}
+
+/* A picked theme beats the system. Light needs nothing, since the light tokens are the default. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: oklch(0.15 0.003 90);
+  --surface: oklch(0.205 0.004 90);
+  --well: oklch(0.165 0.003 90);
+  --ink: oklch(0.95 0.003 90);
+  --quiet: oklch(0.68 0.004 90);
+  --faint: oklch(0.52 0.004 90);
+  --line: oklch(0.28 0.004 90);
+  --ring: oklch(0 0 0 / 0.4);
+  --code-comment: oklch(0.55 0.006 90);
+  --code-string: oklch(0.8 0.09 150);
+  --code-keyword: oklch(0.76 0.11 30);
+  --code-number: oklch(0.82 0.09 85);
+  --code-function: oklch(0.78 0.09 250);
+  --code-type: oklch(0.78 0.09 300);
+  --on-ink: oklch(0.17 0.003 90);
+
+  --edge: inset 0 1px 0 oklch(1 0 0 / 0.07);
+  --raise-card: var(--edge), 0 0 0 1px oklch(0 0 0 / 0.4), 0 1px 2px oklch(0 0 0 / 0.3), 0 12px 30px -12px oklch(0 0 0 / 0.65);
+  --raise-control: inset 0 1px 0 oklch(1 0 0 / 0.1), 0 0 0 1px oklch(0 0 0 / 0.45), 0 1px 2px oklch(0 0 0 / 0.4), 0 3px 8px -3px oklch(0 0 0 / 0.5);
+  --raise-hover: inset 0 1px 0 oklch(1 0 0 / 0.13), 0 0 0 1px oklch(0 0 0 / 0.5), 0 2px 3px oklch(0 0 0 / 0.4), 0 6px 14px -4px oklch(0 0 0 / 0.6);
+  --press: inset 0 1px 3px oklch(0 0 0 / 0.5), 0 0 0 1px oklch(0 0 0 / 0.45);
+  --sink: inset 0 1px 3px oklch(0 0 0 / 0.5), inset 0 0 0 1px oklch(0 0 0 / 0.25), 0 1px 0 oklch(1 0 0 / 0.05);
+  --raise-ink: inset 0 1px 0 oklch(1 0 0 / 0.7), 0 0 0 1px oklch(0 0 0 / 0.4), 0 1px 2px oklch(0 0 0 / 0.4), 0 4px 10px -3px oklch(0 0 0 / 0.6);
+}
+
+/* The theme switch: sun and moon trade places, turning and blurring through each other. */
+.theme-toggle {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-left: 4px;
+  border-radius: 8px;
+  color: var(--quiet);
+}
+
+/* A 40px target around a 32px button. */
+.theme-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+}
+
+.theme-toggle:hover {
+  background: var(--well);
+  color: var(--ink);
+}
+
+.theme-toggle svg {
+  grid-area: 1 / 1;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition:
+    opacity 260ms cubic-bezier(0.2, 0, 0, 1),
+    scale 260ms cubic-bezier(0.2, 0, 0, 1),
+    rotate 260ms cubic-bezier(0.2, 0, 0, 1),
+    filter 260ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+[data-theme-now="light"] .moon,
+[data-theme-now="dark"] .sun {
+  opacity: 0;
+  scale: 0.25;
+  rotate: -90deg;
+  filter: blur(4px);
+}
+
+/* The page cross-fades between themes where view transitions exist. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 320ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Docs: the reading line along the top, drawn by scroll alone. */
+.progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 10;
+    display: block;
+    height: 2px;
+    background: var(--ink);
+    opacity: 0.7;
+    transform-origin: left;
+    animation: read linear both;
+    animation-timeline: scroll(root);
+  }
+
+  @keyframes read {
+    from {
+      transform: scaleX(0);
+    }
+    to {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* Docs: the table of contents' pill glides between sections. */
+.toc {
+  position: relative;
+}
+
+.toc a {
+  position: relative;
+  z-index: 1;
+}
+
+.toc a[aria-current="location"] {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.toc a[aria-current="location"]:hover {
+  background: none;
+}
+
+.toc-pill {
+  position: absolute;
+  top: 0;
+  left: 8px;
+  right: 0;
+  border-radius: 7px;
+  background: var(--surface);
+  box-shadow: var(--raise-control);
+  transition:
+    transform 340ms var(--ease),
+    height 340ms var(--ease);
+}
+
+/* Docs: headings offer their own link on hover. */
+.doc h2 a {
+  position: relative;
+}
+
+.doc h2 a::before {
+  content: "#";
+  position: absolute;
+  right: 100%;
+  padding-right: 8px;
+  color: var(--faint);
+  opacity: 0;
+  translate: 4px 0;
+  transition:
+    opacity 160ms var(--ease),
+    translate 160ms var(--ease);
+}
+
+.doc h2:hover a::before {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* Docs: playable names in the tables. */
+.table td .pill {
+  display: inline-block;
+  margin: 0 4px 4px 0;
+  padding: 1px 7px;
+  border-radius: 6px;
+  background: var(--well);
+  box-shadow: var(--sink);
+  color: var(--ink);
+  font:
+    400 12.5px / 1.5 ui-monospace,
+    "SF Mono",
+    Menlo,
+    monospace;
+}
+
+.table td .pill:hover {
+  background: var(--surface);
+  box-shadow: var(--raise-control);
+}
+
+.table td .pill[aria-current="true"] {
+  background: var(--ink);
+  color: var(--on-ink);
+  box-shadow: var(--raise-ink);
+}
+
+.table tbody tr {
+  transition: background-color 160ms var(--ease);
+}
+
+.table tbody tr:hover {
+  background: var(--well);
+}
+
+@media (max-width: 760px) {
+  .toc-pill {
+    display: none;
+  }
+
+  .toc a[aria-current="location"] {
+    background: var(--surface);
+    box-shadow: var(--raise-control);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-enter] {
+    animation: none;
+  }
+
+  [data-reveal],
+  [data-reveal] .steps > .point,
+  [data-reveal] .points > .point {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+
+  [data-reveal][data-in] .steps > .point:hover,
+  [data-reveal][data-in] .points > .point:hover,
+  .point:hover b {
+    transform: none;
+  }
+
+  .cta:hover .arrow,
+  .doc h2:hover a::before {
+    translate: none;
+  }
+
+  .moods button:active,
+  .preset-grid button:active,
+  .choices button:active,
+  .pill:active,
+  .toc a:active,
+  .site-bar nav a:active,
+  .site-footer a:active,
+  .theme-toggle:active {
+    scale: none;
+  }
+
+  .toc-pill,
+  .copy-icons svg,
+  .theme-toggle svg {
+    transition: none;
+  }
+
+  .progress {
+    display: none;
+  }
+}

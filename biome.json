@@ -3,6 +3,6 @@
   "files": { "includes": ["**", "!**/dist", "!**/node_modules", "!**/skills/tactone/SKILL.md"] },
   "overrides": [
     { "includes": ["src/gains.ts"], "linter": { "enabled": false } },
-    { "includes": ["editor/styles.css"], "linter": { "rules": { "style": { "noDescendingSpecificity": "off" } } } }
+    { "includes": ["editor/styles.css", "site/site.css"], "linter": { "rules": { "style": { "noDescendingSpecificity": "off" } } } }
   ]
 }

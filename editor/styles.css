@@ -27,8 +27,9 @@
   --raise-ink: inset 0 1px 0 oklch(1 0 0 / 0.2), 0 0 0 1px oklch(0.2 0.01 90 / 0.5), 0 1px 2px oklch(0.2 0.01 90 / 0.2), 0 4px 10px -3px oklch(0.2 0.01 90 / 0.32);
 }
 
+/* A page can pin a theme with data-theme on <html>. The editor never does, so it always follows the system. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --bg: oklch(0.15 0.003 90);
     --surface: oklch(0.205 0.004 90);
     --well: oklch(0.165 0.003 90);

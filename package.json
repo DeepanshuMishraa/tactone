@@ -63,6 +63,8 @@
     "build": "tsc -p tsconfig.build.json && node scripts/declarations.mjs && tsc -p tsconfig.cli.json && vite build editor",
     "prepack": "pnpm build",
     "editor": "vite editor",
+    "site": "vite site",
+    "site:build": "vite build site",
     "tactone": "node dist/cli.js"
   },
   "peerDependencies": {
