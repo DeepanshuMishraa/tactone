@@ -38,6 +38,66 @@ export function Root() {
 }
 ```
 
+Define `config` at module level, never inside a component. `SoundRoot` reconfigures whenever the `config` reference changes.
+
+### Plain React (Vite or any client-rendered app)
+
+Wrap the tree where it mounts:
+
+```tsx
+// src/main.tsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
+import { App } from "./App";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+createRoot(document.getElementById("root") as HTMLElement).render(
+  <StrictMode>
+    <SoundRoot config={config}>
+      <App />
+    </SoundRoot>
+  </StrictMode>,
+);
+```
+
+### TanStack Start
+
+Wrap the `Outlet` in the root route. TanStack Start has no server components, so the config can live in the same file. `SoundRoot` renders during SSR and starts listening after hydration.
+
+```tsx
+// src/routes/__root.tsx
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+export const Route = createRootRoute({ component: RootComponent });
+
+function RootComponent() {
+  return (
+    <html lang="en">
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <SoundRoot config={config}>
+          <Outlet />
+        </SoundRoot>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
+If the project already has a root document (a `shellComponent` or `RootDocument`), add `SoundRoot` around its children instead of replacing it.
+
 ### Next.js App Router
 
 `defaultRules` contains functions, which React cannot pass from a server component to a client component. Define the config inside a `"use client"` file and render that component from the layout:

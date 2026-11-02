@@ -33,6 +33,14 @@ Read the file that owns the change. The README is the public contract. `test/con
 | `scripts/declarations.mjs` | Rewrites `.ts` specifiers in `dist/*.d.ts` to `.js`                                     |
 | `test/consumer/`           | Typecheck of the README against the built declarations                                  |
 
+Setup examples for plain React, Next.js, TanStack Start and no framework appear in three places: the README, `site/docs.tsx` and `site/public/agents.md`, which the site serves at `/agents.md` for coding agents. Change one and change all three. In every example, `config` is defined at module level, because `SoundRoot` reconfigures whenever its reference changes.
+
+| Path                    | Owns                                                       |
+| ----------------------- | ---------------------------------------------------------- |
+| `site/`                 | The marketing site and docs. `pnpm site`, `pnpm site:build` |
+| `site/wrangler.jsonc`   | The Cloudflare Worker serving `site/dist` at tactone.dipxsy.app |
+| `pnpm site:deploy`      | Builds the site and deploys it with `wrangler`              |
+
 `src/index.ts` does not re-export presets. A new public function belongs on the entry that already owns that idea, then in the README and `test/consumer/usage.tsx`.
 
 ## Changing a sound

@@ -1,0 +1,15 @@
+# Tactone
+
+> Tactone adds UI sound effects to web apps. Wrap a React app once and every button, link, checkbox, slider, select and text field plays the right sound. 36 presets and 684 level-matched sounds, synthesized live with Web Audio. No audio files, no runtime dependencies, MIT licensed.
+
+Install with `npm i tactone`. Works with React 18+, Next.js, TanStack Start, Vite, or no framework.
+
+## Docs
+
+- [Agent guide](https://tactone.dipxsy.app/agents.md): complete setup for coding agents, in Markdown
+- [Docs](https://tactone.dipxsy.app/docs/): install, presets, rules, attributes, framework setup, custom sounds
+
+## Source
+
+- [GitHub](https://github.com/DeepanshuMishraa/tactone)
+- [npm](https://www.npmjs.com/package/tactone)

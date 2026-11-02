@@ -16,7 +16,9 @@ const SECTIONS = [
   { id: "tweak", title: "Tweak a sound" },
   { id: "rules", title: "Rules" },
   { id: "attributes", title: "Attributes" },
+  { id: "react", title: "React" },
   { id: "nextjs", title: "Next.js" },
+  { id: "tanstack-start", title: "TanStack Start" },
   { id: "vanilla", title: "Without React" },
   { id: "scratch", title: "Build from scratch" },
   { id: "levels", title: "Levels" },
@@ -276,6 +278,32 @@ const sounds = {
             />
           </Section>
 
+          <Section id="react">
+            <p>
+              In a client-rendered app, such as one made with Vite, wrap the tree where you mount it. Define the config at module level so it keeps the same reference on every
+              render.
+            </p>
+            <Code
+              file="src/main.tsx"
+              code={`import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
+import { App } from "./App";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+createRoot(document.getElementById("root") as HTMLElement).render(
+  <StrictMode>
+    <SoundRoot config={config}>
+      <App />
+    </SoundRoot>
+  </StrictMode>,
+);`}
+            />
+          </Section>
+
           <Section id="nextjs">
             <p>
               <code>defaultRules</code> contains functions, and React can't pass functions from a server component to a client component. Define the config in a client component,
@@ -294,6 +322,40 @@ const config = defineSounds({ sounds: glass, rules: defaultRules });
 
 export function Sounds({ children }: { children: ReactNode }) {
   return <SoundRoot config={config}>{children}</SoundRoot>;
+}`}
+            />
+          </Section>
+
+          <Section id="tanstack-start">
+            <p>
+              Wrap the <code>Outlet</code> in your root route. There are no server components, so the config can live in the same file. <code>SoundRoot</code> renders on the server
+              and only starts listening once the page hydrates.
+            </p>
+            <Code
+              file="src/routes/__root.tsx"
+              code={`import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+export const Route = createRootRoute({ component: RootComponent });
+
+function RootComponent() {
+  return (
+    <html lang="en">
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <SoundRoot config={config}>
+          <Outlet />
+        </SoundRoot>
+        <Scripts />
+      </body>
+    </html>
+  );
 }`}
             />
           </Section>

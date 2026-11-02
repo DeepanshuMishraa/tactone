@@ -107,6 +107,62 @@ Attributes beat rules, for one-off exceptions:
 
 Disabled controls stay silent.
 
+## Plain React
+
+In a client-rendered app, such as one made with Vite, wrap the tree where you mount it. Define the config at module level so it keeps the same reference on every render:
+
+```tsx
+// src/main.tsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
+import { App } from "./App";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+createRoot(document.getElementById("root") as HTMLElement).render(
+  <StrictMode>
+    <SoundRoot config={config}>
+      <App />
+    </SoundRoot>
+  </StrictMode>,
+);
+```
+
+## TanStack Start
+
+Wrap the `Outlet` in your root route. There are no server components, so the config can live in the same file. `SoundRoot` renders on the server and starts listening once the page hydrates:
+
+```tsx
+// src/routes/__root.tsx
+import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
+
+const config = defineSounds({ sounds: glass, rules: defaultRules });
+
+export const Route = createRootRoute({ component: RootComponent });
+
+function RootComponent() {
+  return (
+    <html lang="en">
+      <head>
+        <HeadContent />
+      </head>
+      <body>
+        <SoundRoot config={config}>
+          <Outlet />
+        </SoundRoot>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+```
+
 ## Next.js and server components
 
 `defaultRules` contains functions, and React cannot pass functions from a server component to a client component. Define the config in a client component, then use that component in your layout:

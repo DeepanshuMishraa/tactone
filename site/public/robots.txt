@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://tactone.dipxsy.app/sitemap.xml
