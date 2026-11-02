@@ -2,6 +2,12 @@
 
 Sounds for your interface. Pick a preset, wrap your app, done. 36 presets and 684 level-matched sounds, synthesized live, with no audio files and no runtime dependencies.
 
+Site and docs: [tactone.dipxsy.app](https://tactone.dipxsy.app)
+
+```sh
+npm install tactone
+```
+
 ```tsx
 import { defaultRules, defineSounds } from "tactone";
 import { SoundRoot } from "tactone/react";
@@ -173,6 +179,8 @@ pnpm editor  # the visual editor, with live reload
 pnpm build          # library, CLI, and the editor bundle in dist/
 pnpm tactone editor   # open that build
 npx tactone editor    # same command once the package is installed
+pnpm site             # the marketing site and docs, with live reload
+pnpm site:deploy      # build the site and deploy it to Cloudflare (needs wrangler)
 ```
 
 ## Agent skill
@@ -187,4 +195,4 @@ This copies it to `~/.agents/skills/tactone`, replacing any copy already there.
 
 ## License
 
-MIT
+[MIT](LICENSE)

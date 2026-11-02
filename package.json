@@ -65,6 +65,7 @@
     "editor": "vite editor",
     "site": "vite site",
     "site:build": "vite build site",
+    "site:deploy": "vite build site && wrangler deploy -c site/wrangler.jsonc",
     "tactone": "node dist/cli.js"
   },
   "peerDependencies": {
