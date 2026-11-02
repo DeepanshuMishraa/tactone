@@ -1,6 +1,6 @@
 {
   "name": "tactone",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Interface sounds you can shape. One config at the root, synthesized live, no audio files.",
   "license": "MIT",
   "author": "Deepanshu Mishra",
