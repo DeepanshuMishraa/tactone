@@ -91,7 +91,7 @@ describe("editor", () => {
     await act(async () => button("Digital").click());
     expect(heading()).toBe("Retro");
     expect(document.querySelector('nav[aria-label="Moods"] [aria-current="true"]')?.textContent).toBe("Digital");
-    expect(code()).toContain('import { retro } from "foley/presets"');
+    expect(code()).toContain('import { retro } from "tactone/presets"');
   });
 
   it("switches preset within a mood", async () => {
@@ -144,7 +144,7 @@ describe("editor", () => {
     const copy = block?.querySelector(".code-copy");
     if (!(copy instanceof HTMLButtonElement)) throw new Error("the code block has no copy button");
     await act(async () => copy.click());
-    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('from "foley/presets"'));
+    expect(writeText).toHaveBeenCalledWith(expect.stringContaining('from "tactone/presets"'));
     expect(copy.textContent).toContain("Copied");
     expect(block?.querySelector(".token-keyword")?.textContent).toBe("import");
   });
@@ -165,7 +165,7 @@ describe("editor", () => {
     expect(toggle.getAttribute("aria-expanded")).toBe("false");
     await act(async () => toggle.click());
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
-    expect(toggle.textContent).toContain("foley.config.ts");
+    expect(toggle.textContent).toContain("tactone.config.ts");
   });
 
   it("puts a change into the code, and Reset takes it back out", async () => {
@@ -266,8 +266,8 @@ describe("highlight", () => {
   });
 
   it.each([
-    ['import { glass } from "foley/presets";', "import", "keyword"],
-    ['import { glass } from "foley/presets";', '"foley/presets"', "string"],
+    ['import { glass } from "tactone/presets";', "import", "keyword"],
+    ['import { glass } from "tactone/presets";', '"tactone/presets"', "string"],
     ["export const config = defineSounds({", "defineSounds", "function"],
     ["  rules: defaultRules,", "rules", "property"],
     ["export const tap: Sound = {", "Sound", "type"],
@@ -397,12 +397,12 @@ describe("finish", () => {
 describe("Library", () => {
   it("skips corrupt entries and keeps good ones", () => {
     const good = { name: "Good", parts: [{ kind: "tone", wave: "sine", frequency: 440, attack: 0, decay: 0.1, peak: 0.5 }], room: 0, volume: 0 };
-    localStorage.setItem("foley.sounds", JSON.stringify([good, { name: "Bad", parts: "nope", room: 0, volume: 0 }, 7]));
+    localStorage.setItem("tactone.sounds", JSON.stringify([good, { name: "Bad", parts: "nope", room: 0, volume: 0 }, 7]));
     expect(Library.load().map((sound) => sound.name)).toEqual(["Good"]);
   });
 
   it("returns nothing for unreadable storage rather than throwing", () => {
-    localStorage.setItem("foley.sounds", "{not json");
+    localStorage.setItem("tactone.sounds", "{not json");
     expect(Library.load()).toEqual([]);
   });
 });

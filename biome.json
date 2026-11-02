@@ -1,6 +1,6 @@
 {
   "formatter": { "indentStyle": "space", "indentWidth": 2, "lineWidth": 180 },
-  "files": { "includes": ["**", "!**/dist", "!**/node_modules", "!**/skills/foley/SKILL.md"] },
+  "files": { "includes": ["**", "!**/dist", "!**/node_modules", "!**/skills/tactone/SKILL.md"] },
   "overrides": [
     { "includes": ["src/gains.ts"], "linter": { "enabled": false } },
     { "includes": ["editor/styles.css"], "linter": { "rules": { "style": { "noDescendingSpecificity": "off" } } } }

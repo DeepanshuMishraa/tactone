@@ -154,7 +154,7 @@ export const Draft = {
   isChanged: (draft: Draft) => draft.shape !== NEUTRAL_SHAPE || draft.parts !== draft.start.parts || draft.room !== draft.start.room || draft.volume !== 0,
 } as const;
 
-const STORAGE_KEY = "foley.sounds";
+const STORAGE_KEY = "tactone.sounds";
 
 /**
  * Saved sounds live in this browser only. Storage can be blocked or hold old

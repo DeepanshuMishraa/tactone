@@ -44,7 +44,7 @@ export function createSounds<Name extends string>(config: Config<Name>): Sounds<
   const trigger = (name: Name, options: PlayOptions = {}) => {
     const sound = sounds[name];
     if (sound === undefined) {
-      report(`foley has no sound named "${name}". Known sounds: ${Object.keys(sounds).join(", ")}. Nothing played.`);
+      report(`tactone has no sound named "${name}". Known sounds: ${Object.keys(sounds).join(", ")}. Nothing played.`);
       return;
     }
     const pitched = options.pitch === undefined ? sound : Sound.tweak(sound, { pitch: options.pitch });
@@ -60,7 +60,7 @@ export function createSounds<Name extends string>(config: Config<Name>): Sounds<
       const decision: Decision<Name> = Rules.decide(rules, kind, target, event, isName);
       if (decision.kind === "silent") return;
       if (decision.kind === "unknown") {
-        report(`foley found data-sound-${kind}="${decision.name}" but no sound has that name. Known sounds: ${Object.keys(sounds).join(", ")}. Nothing played.`);
+        report(`tactone found data-sound-${kind}="${decision.name}" but no sound has that name. Known sounds: ${Object.keys(sounds).join(", ")}. Nothing played.`);
         return;
       }
       if (kind === "hover" && event instanceof PointerEvent && event.relatedTarget instanceof Node && decision.element.contains(event.relatedTarget)) return;

@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 /**
- * `npx foley` and `npx foley editor` serve the built editor and open it.
+ * `npx tactone` and `npx tactone editor` serve the built editor and open it.
  * The assets live next to this file, at dist/editor, after `pnpm build`.
- * `npx foley skill` copies the agent skill to ~/.agents/skills/foley.
+ * `npx tactone skill` copies the agent skill to ~/.agents/skills/tactone.
  */
 
 import { spawn } from "node:child_process";
@@ -79,7 +79,7 @@ export function parseArgs(argv: readonly string[]): CliArgs {
       port = value;
       continue;
     }
-    return { command, help: false, open: true, port: undefined, error: `Unknown argument "${arg}". Run \`foley --help\` for usage.` };
+    return { command, help: false, open: true, port: undefined, error: `Unknown argument "${arg}". Run \`tactone --help\` for usage.` };
   }
 
   return { command, help, open, port, error: undefined };
@@ -144,7 +144,7 @@ export function serveEditor(options: { readonly root: string; readonly port?: nu
     server.listen(port, hostname, () => {
       const address = server.address();
       if (address === null || typeof address === "string") {
-        reject(new Error("The Foley editor server did not bind to a TCP port."));
+        reject(new Error("The Tactone editor server did not bind to a TCP port."));
         return;
       }
       resolve({
@@ -158,10 +158,10 @@ export function serveEditor(options: { readonly root: string; readonly port?: nu
 /** What to tell someone when the editor server could not start. */
 export function serveFailure(error: unknown, port: number | undefined): string {
   if (error instanceof Error && "code" in error && error.code === "EADDRINUSE") {
-    return `Port ${port} is already in use, so the Foley editor did not start. Pass another with --port <n>, or leave out --port to use a free one.`;
+    return `Port ${port} is already in use, so the Tactone editor did not start. Pass another with --port <n>, or leave out --port to use a free one.`;
   }
   const reason = error instanceof Error ? error.message : "The reason was not reported.";
-  return `The Foley editor did not start. ${reason}`;
+  return `The Tactone editor did not start. ${reason}`;
 }
 
 function closeServer(server: Server): Promise<void> {
@@ -184,25 +184,25 @@ function openBrowser(url: string) {
   child.unref();
 }
 
-const HELP = `Usage: foley [editor] [--port <n>] [--no-open]
-       foley skill
+const HELP = `Usage: tactone [editor] [--port <n>] [--no-open]
+       tactone skill
 
-Serves the Foley editor on localhost and opens it in your browser.
-\`foley\` and \`foley editor\` do the same thing.
+Serves the Tactone editor on localhost and opens it in your browser.
+\`tactone\` and \`tactone editor\` do the same thing.
 
-\`foley skill\` copies the agent skill to ~/.agents/skills/foley, replacing any copy already there.`;
+\`tactone skill\` copies the agent skill to ~/.agents/skills/tactone, replacing any copy already there.`;
 
 async function installSkill() {
-  const source = fileURLToPath(new URL("../skills/foley/", import.meta.url));
-  const destination = join(homedir(), ".agents", "skills", "foley");
+  const source = fileURLToPath(new URL("../skills/tactone/", import.meta.url));
+  const destination = join(homedir(), ".agents", "skills", "tactone");
   try {
     await mkdir(dirname(destination), { recursive: true });
     await cp(source, destination, { recursive: true, force: true });
-    console.log(`Foley installed its agent skill at ${destination}.`);
+    console.log(`Tactone installed its agent skill at ${destination}.`);
   } catch (error) {
     const reason = error instanceof Error ? error.message : "The reason was not reported.";
-    console.error(`Could not install the Foley skill at ${destination}. ${reason}`);
-    console.error("The package itself still works. To install the skill by hand, copy skills/foley from the package to that path.");
+    console.error(`Could not install the Tactone skill at ${destination}. ${reason}`);
+    console.error("The package itself still works. To install the skill by hand, copy skills/tactone from the package to that path.");
     process.exitCode = 1;
   }
 }
@@ -227,15 +227,15 @@ async function main() {
   try {
     await stat(join(root, "index.html"));
   } catch {
-    console.error(`Could not find the Foley editor at ${root}.`);
-    console.error("From the foley repo, run `pnpm build`. If you installed the package, reinstall it so the build is included.");
+    console.error(`Could not find the Tactone editor at ${root}.`);
+    console.error("From the tactone repo, run `pnpm build`. If you installed the package, reinstall it so the build is included.");
     process.exitCode = 1;
     return;
   }
 
   try {
     const server = await serveEditor({ root, ...(parsed.port === undefined ? {} : { port: parsed.port }) });
-    console.log(`Foley editor at ${server.url}`);
+    console.log(`Tactone editor at ${server.url}`);
     if (parsed.open) openBrowser(server.url);
   } catch (error) {
     console.error(serveFailure(error, parsed.port));

@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { fileInRoot, parseArgs, serveEditor, serveFailure } from "../cli/cli.ts";
 
 type PackageJson = {
-  readonly bin: { readonly foley: string };
+  readonly bin: { readonly tactone: string };
   readonly files: readonly string[];
   readonly exports: {
     readonly ".": { readonly types: string; readonly import: string };
@@ -41,7 +41,7 @@ function readPackage(value: unknown): PackageJson {
     return { types: readString(item.types, `exports["${name}"].types`), import: readString(item.import, `exports["${name}"].import`) };
   };
   return {
-    bin: { foley: readString(value.bin.foley, "bin.foley") },
+    bin: { tactone: readString(value.bin.tactone, "bin.tactone") },
     files,
     exports: { ".": entry("."), "./react": entry("./react"), "./presets": entry("./presets") },
   };
@@ -50,9 +50,9 @@ function readPackage(value: unknown): PackageJson {
 const pkg = readPackage(JSON.parse(await readFile(new URL("../package.json", import.meta.url), "utf8")));
 
 describe("package entry points", () => {
-  it("publishes the typed entries and the foley command", () => {
+  it("publishes the typed entries and the tactone command", () => {
     expect(pkg.files).toEqual(["dist", "skills"]);
-    expect(pkg.bin.foley).toBe("./dist/cli.js");
+    expect(pkg.bin.tactone).toBe("./dist/cli.js");
     expect(pkg.exports["."]).toMatchObject({ types: "./dist/index.d.ts", import: "./dist/index.js" });
     expect(pkg.exports["./react"]).toMatchObject({ types: "./dist/react.d.ts", import: "./dist/react.js" });
     expect(pkg.exports["./presets"]).toMatchObject({ types: "./dist/presets.d.ts", import: "./dist/presets.js" });
@@ -70,31 +70,31 @@ describe("package entry points", () => {
 });
 
 describe("parseArgs", () => {
-  it("treats foley and foley editor as the same command", () => {
-    expect(parseArgs(["node", "foley"])).toMatchObject({ help: false, open: true, error: undefined });
-    expect(parseArgs(["node", "foley", "editor"])).toMatchObject({ help: false, open: true, port: undefined, error: undefined });
+  it("treats tactone and tactone editor as the same command", () => {
+    expect(parseArgs(["node", "tactone"])).toMatchObject({ help: false, open: true, error: undefined });
+    expect(parseArgs(["node", "tactone", "editor"])).toMatchObject({ help: false, open: true, port: undefined, error: undefined });
   });
 
   it("reads a port and --no-open", () => {
-    expect(parseArgs(["node", "foley", "editor", "--port", "4321", "--no-open"])).toMatchObject({ open: false, port: 4321, error: undefined });
-    expect(parseArgs(["node", "foley", "--port=0"])).toMatchObject({ port: 0, error: undefined });
+    expect(parseArgs(["node", "tactone", "editor", "--port", "4321", "--no-open"])).toMatchObject({ open: false, port: 4321, error: undefined });
+    expect(parseArgs(["node", "tactone", "--port=0"])).toMatchObject({ port: 0, error: undefined });
   });
 
   it("rejects a bad port and unknown arguments", () => {
-    expect(parseArgs(["node", "foley", "--port", "nope"]).error).toMatch(/port/);
-    expect(parseArgs(["node", "foley", "build"]).error).toMatch(/Unknown argument/);
+    expect(parseArgs(["node", "tactone", "--port", "nope"]).error).toMatch(/port/);
+    expect(parseArgs(["node", "tactone", "build"]).error).toMatch(/Unknown argument/);
   });
 
   it("reads the skill command and defaults to the editor", () => {
-    expect(parseArgs(["node", "foley", "skill"])).toMatchObject({ command: "skill", error: undefined });
-    expect(parseArgs(["node", "foley"])).toMatchObject({ command: "editor" });
-    expect(parseArgs(["node", "foley", "editor"])).toMatchObject({ command: "editor" });
+    expect(parseArgs(["node", "tactone", "skill"])).toMatchObject({ command: "skill", error: undefined });
+    expect(parseArgs(["node", "tactone"])).toMatchObject({ command: "editor" });
+    expect(parseArgs(["node", "tactone", "editor"])).toMatchObject({ command: "editor" });
   });
 });
 
 describe("serveFailure", () => {
   it("names a busy port and how to recover", async () => {
-    const root = await mkdtemp(join(tmpdir(), "foley-busy-"));
+    const root = await mkdtemp(join(tmpdir(), "tactone-busy-"));
     const first = await serveEditor({ root, port: 0 });
     const port = Number(new URL(first.url).port);
     try {
@@ -118,9 +118,9 @@ describe("serveEditor", () => {
   let root = "";
 
   beforeEach(async () => {
-    root = await mkdtemp(join(tmpdir(), "foley-editor-"));
+    root = await mkdtemp(join(tmpdir(), "tactone-editor-"));
     await mkdir(join(root, "assets"));
-    await writeFile(join(root, "index.html"), "<p>foley</p>");
+    await writeFile(join(root, "index.html"), "<p>tactone</p>");
     await writeFile(join(root, "assets", "app.js"), "export const ok = true;\n");
     await writeFile(join(root, "..", "outside.txt"), "secret");
     await symlink(join(root, "..", "outside.txt"), join(root, "leak.txt"));
@@ -142,7 +142,7 @@ describe("serveEditor", () => {
     const server = await serveEditor({ root, port: 0 });
     try {
       const page = await fetch(server.url);
-      expect(await page.text()).toBe("<p>foley</p>");
+      expect(await page.text()).toBe("<p>tactone</p>");
       expect(page.headers.get("content-type")).toMatch(/text\/html/);
 
       const script = await fetch(new URL("assets/app.js", server.url));

@@ -298,7 +298,7 @@ function PresetsPage({ onCreateFrom }: { readonly onCreateFrom: (draft: Draft) =
           ) : null}
         </div>
 
-        <CodeBlock code={code} file="foley.config.ts" onCopy={replay} />
+        <CodeBlock code={code} file="tactone.config.ts" onCopy={replay} />
 
         <form
           className="try card"
@@ -346,7 +346,7 @@ function App() {
     <div className="app">
       <header className="bar">
         <a className="mark" href="#/">
-          foley
+          tactone
         </a>
         <nav aria-label="Pages">
           <a href="#/" aria-current={creating ? undefined : "page"}>

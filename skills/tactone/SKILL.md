@@ -1,11 +1,11 @@
 ---
-name: foley
-description: Navigate the Foley package, a library of synthesized interface sounds with a typed npm entry, a React binding, 36 presets, and an editor opened by `npx foley editor`. Use this whenever the work is in this repo or about Foley sounds, presets, rules, loudness, the editor, the CLI, or the published package, including when the user only says a sound is wrong, a preset should change, or the editor should open.
+name: tactone
+description: Navigate the Tactone package, a library of synthesized interface sounds with a typed npm entry, a React binding, 36 presets, and an editor opened by `npx tactone editor`. Use this whenever the work is in this repo or about Tactone sounds, presets, rules, loudness, the editor, the CLI, or the published package, including when the user only says a sound is wrong, a preset should change, or the editor should open.
 ---
 
-# Foley
+# Tactone
 
-Foley synthesizes interface sounds in the browser. There are no audio files. A style is the timbre (`glass`, `retro`). A purpose is the gesture (`tap`, `success`). Every preset is one style playing all 19 purposes. Apps import a preset, pass it to `defineSounds` with `defaultRules`, and wrap the tree in `SoundRoot`.
+Tactone synthesizes interface sounds in the browser. There are no audio files. A style is the timbre (`glass`, `retro`). A purpose is the gesture (`tap`, `success`). Every preset is one style playing all 19 purposes. Apps import a preset, pass it to `defineSounds` with `defaultRules`, and wrap the tree in `SoundRoot`.
 
 Read the file that owns the change. The README is the public contract. `test/consumer/usage.tsx` compiles that contract against `dist/`, so a public example that typechecks there is a public example that ships.
 
@@ -26,9 +26,9 @@ Read the file that owns the change. The README is the public contract. `test/con
 | `src/driver.ts`            | The only Web Audio graph                                                                |
 | `src/render.ts`            | Offline samples for loudness, the editor waveform, and WAV export                       |
 | `src/loudness.ts`          | `Levels.of`, `Levels.normalize`                                                         |
-| `src/index.ts`             | The `foley` export. Presets stay on `foley/presets` so one set can tree-shake           |
+| `src/index.ts`             | The `tactone` export. Presets stay on `tactone/presets` so one set can tree-shake           |
 | `editor/`                  | The two-page editor. Vite root is this directory                                        |
-| `cli/cli.ts`               | `npx foley` and `npx foley editor`. Serves `dist/editor`                                |
+| `cli/cli.ts`               | `npx tactone` and `npx tactone editor`. Serves `dist/editor`                                |
 | `scripts/gains.ts`         | Rewrites `src/gains.ts`. Run with `pnpm gains` (Bun)                                    |
 | `scripts/declarations.mjs` | Rewrites `.ts` specifiers in `dist/*.d.ts` to `.js`                                     |
 | `test/consumer/`           | Typecheck of the README against the built declarations                                  |
@@ -53,7 +53,7 @@ A new style also needs a named export and a `sets` entry in `src/presets.ts`, a 
 
 ## Editor and the npm command
 
-`pnpm editor` is the Vite dev server. `pnpm build` compiles the library, rewrites declaration specifiers, compiles `cli/cli.ts` to `dist/cli.js`, and bundles the editor to `dist/editor`. `pnpm foley editor` serves that bundle and opens it. The published package does the same through the `foley` bin, so `npx foley editor` works after install. `prepack` runs the build. Publish `dist/` and `skills/foley`. The package runs no install scripts.
+`pnpm editor` is the Vite dev server. `pnpm build` compiles the library, rewrites declaration specifiers, compiles `cli/cli.ts` to `dist/cli.js`, and bundles the editor to `dist/editor`. `pnpm tactone editor` serves that bundle and opens it. The published package does the same through the `tactone` bin, so `npx tactone editor` works after install. `prepack` runs the build. Publish `dist/` and `skills/tactone`. The package runs no install scripts.
 
 Source imports end in `.ts`. The JS emit rewrites those to `.js`. Declaration files need `scripts/declarations.mjs` as well, because TypeScript leaves `.ts` in the `.d.ts` and older resolvers reject that.
 
@@ -63,4 +63,4 @@ Source imports end in `.ts`. The JS emit rewrites those to `.js`. Declaration fi
 
 ## This copy
 
-`npx foley skill` copies `skills/foley` to `~/.agents/skills/foley` and prints that path. Nothing else writes there. Edit the file in the repo. The next `npx foley skill` replaces the home-directory copy.
+`npx tactone skill` copies `skills/tactone` to `~/.agents/skills/tactone` and prints that path. Nothing else writes there. Edit the file in the repo. The next `npx tactone skill` replaces the home-directory copy.

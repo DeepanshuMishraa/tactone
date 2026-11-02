@@ -1,11 +1,11 @@
-# Foley
+# Tactone
 
 Sounds for your interface. Pick a preset, wrap your app, done. 36 presets and 684 level-matched sounds, synthesized live, with no audio files and no runtime dependencies.
 
 ```tsx
-import { defaultRules, defineSounds } from "foley";
-import { SoundRoot } from "foley/react";
-import { glass } from "foley/presets";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
 
 const config = defineSounds({ sounds: glass, rules: defaultRules });
 
@@ -14,7 +14,7 @@ const config = defineSounds({ sounds: glass, rules: defaultRules });
 </SoundRoot>;
 ```
 
-Every button, link, checkbox, slider, select and text field now sounds right. To audition all of them, run `pnpm editor` in this repo, or `npx foley editor` from an install.
+Every button, link, checkbox, slider, select and text field now sounds right. To audition all of them, run `pnpm editor` in this repo, or `npx tactone editor` from an install.
 
 ## Presets
 
@@ -54,8 +54,8 @@ const sounds = { ...felt, success: chime.success, error: glass.error };
 ## Make one yours
 
 ```ts
-import { Sound } from "foley";
-import { glass } from "foley/presets";
+import { Sound } from "tactone";
+import { glass } from "tactone/presets";
 
 const sounds = {
   ...glass,
@@ -109,9 +109,9 @@ Disabled controls stay silent.
 // app/sounds.tsx
 "use client";
 
-import { defaultRules, defineSounds } from "foley";
-import { SoundRoot } from "foley/react";
-import { glass } from "foley/presets";
+import { defaultRules, defineSounds } from "tactone";
+import { SoundRoot } from "tactone/react";
+import { glass } from "tactone/presets";
 import type { ReactNode } from "react";
 
 const config = defineSounds({ sounds: glass, rules: defaultRules });
@@ -126,8 +126,8 @@ export function Sounds({ children }: { children: ReactNode }) {
 The core has no framework in it:
 
 ```ts
-import { createSounds, defaultRules } from "foley";
-import { glass } from "foley/presets";
+import { createSounds, defaultRules } from "tactone";
+import { glass } from "tactone/presets";
 
 const sounds = createSounds({ sounds: glass, rules: defaultRules });
 const stop = sounds.start();
@@ -136,12 +136,12 @@ sounds.play("success");
 
 ## Build from scratch
 
-The easiest way is the Create page in the editor (`pnpm editor`, or `npx foley editor` from an install). Stack parts, shape them with plain sliders, save them in your browser, and copy the code.
+The easiest way is the Create page in the editor (`pnpm editor`, or `npx tactone editor` from an install). Stack parts, shape them with plain sliders, save them in your browser, and copy the code.
 
 In code, a sound is an object of tone and noise layers, which you can write by hand or save as JSON:
 
 ```ts
-import { GLASS, Levels, Sound, strike } from "foley";
+import { GLASS, Levels, Sound, strike } from "tactone";
 
 const chord = Sound.of([...strike(880, 0.4, 0.6, GLASS), ...strike(1320, 0.5, 0.5, GLASS, { offset: 0.08 })], { room: 0.4 });
 
@@ -162,7 +162,7 @@ Presets sit in three loudness tiers: frequent feedback at -30 dB, actions at -23
 - After 20 seconds of quiet the context suspends, so Safari releases the audio device.
 - During SSR nothing happens: `createSounds` touches no browser API until `start` or `play`.
 
-Your app owns preferences. `setVolume` and `setMuted` apply a setting, and Foley stores nothing.
+Your app owns preferences. `setVolume` and `setMuted` apply a setting, and Tactone stores nothing.
 
 ## Develop
 
@@ -171,8 +171,8 @@ pnpm check   # typecheck, lint, tests, and the published type entry points
 pnpm gains   # re-measure every preset after changing src/design.ts (runs on Bun)
 pnpm editor  # the visual editor, with live reload
 pnpm build          # library, CLI, and the editor bundle in dist/
-pnpm foley editor   # open that build
-npx foley editor    # same command once the package is installed
+pnpm tactone editor   # open that build
+npx tactone editor    # same command once the package is installed
 ```
 
 ## Agent skill
@@ -180,10 +180,10 @@ npx foley editor    # same command once the package is installed
 The package includes a skill that helps coding agents navigate it. Installing the package does not touch your home directory. To add the skill, run:
 
 ```sh
-npx foley skill
+npx tactone skill
 ```
 
-This copies it to `~/.agents/skills/foley`, replacing any copy already there.
+This copies it to `~/.agents/skills/tactone`, replacing any copy already there.
 
 ## License
 

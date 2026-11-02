@@ -118,7 +118,7 @@ export function createEngine(options: EngineOptions = {}): Engine {
         () => active.state() === "running",
         (cause: unknown) => {
           options.onError?.(
-            new Error(`foley could not resume audio (state: ${active.state()}). Sounds stay silent until the next user gesture. Your app is unaffected.`, { cause }),
+            new Error(`tactone could not resume audio (state: ${active.state()}). Sounds stay silent until the next user gesture. Your app is unaffected.`, { cause }),
           );
           return false;
         },

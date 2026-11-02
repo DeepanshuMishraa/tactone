@@ -49,7 +49,7 @@ type SliderProps = {
  * A raised pane sliding inside a recessed trough, with the name and reading
  * written across both. An invisible native range input lies over it, which
  * supplies dragging, touch, keyboard and screen reader support, and fires the
- * real `input` event that Foley's own `slide` rule listens for.
+ * real `input` event that Tactone's own `slide` rule listens for.
  */
 export function Slider({ label, min, max, value, scale = "linear", format, onChange, onCommit }: SliderProps) {
   const toPosition = (v: number) => (scale === "log" ? Math.log(v / min) / Math.log(max / min) : (v - min) / (max - min));

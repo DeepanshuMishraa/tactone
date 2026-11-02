@@ -1,16 +1,16 @@
 {
-  "name": "foley",
+  "name": "tactone",
   "version": "0.1.0",
   "description": "Interface sounds you can shape. One config at the root, synthesized live, no audio files.",
   "license": "MIT",
   "author": "Deepanshu Mishra",
-  "homepage": "https://github.com/DeepanshuMishraa/foley#readme",
+  "homepage": "https://github.com/DeepanshuMishraa/tactone#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/DeepanshuMishraa/foley.git"
+    "url": "git+https://github.com/DeepanshuMishraa/tactone.git"
   },
   "bugs": {
-    "url": "https://github.com/DeepanshuMishraa/foley/issues"
+    "url": "https://github.com/DeepanshuMishraa/tactone/issues"
   },
   "keywords": [
     "sound",
@@ -33,7 +33,7 @@
     "skills"
   ],
   "bin": {
-    "foley": "./dist/cli.js"
+    "tactone": "./dist/cli.js"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -63,7 +63,7 @@
     "build": "tsc -p tsconfig.build.json && node scripts/declarations.mjs && tsc -p tsconfig.cli.json && vite build editor",
     "prepack": "pnpm build",
     "editor": "vite editor",
-    "foley": "node dist/cli.js"
+    "tactone": "node dist/cli.js"
   },
   "peerDependencies": {
     "react": ">=18"

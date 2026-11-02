@@ -7,7 +7,7 @@ const editorDir = dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig(({ command }) => ({
   plugins: [react()],
-  // Relative URLs so the built editor works on whatever port `foley` binds.
+  // Relative URLs so the built editor works on whatever port `tactone` binds.
   // Dev stays at `/`, which is what the Vite server expects.
   base: command === "build" ? "./" : "/",
   build: {

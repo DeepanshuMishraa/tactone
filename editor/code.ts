@@ -38,8 +38,8 @@ export const Code = {
     });
     const imports = lines.length === 0 ? "defaultRules, defineSounds" : "defaultRules, defineSounds, Sound";
     const sounds = lines.length === 0 ? `  sounds: ${style},` : `  sounds: {\n    ...${style},\n${lines.join("\n")}\n  },`;
-    return `import { ${imports} } from "foley";
-import { ${style} } from "foley/presets";
+    return `import { ${imports} } from "tactone";
+import { ${style} } from "tactone/presets";
 
 export const config = defineSounds({
 ${sounds}
@@ -52,7 +52,7 @@ ${sounds}
   },
 
   /** A sound made from scratch, plus how to use it. */
-  sound: (name: string, sound: Sound) => `import type { Sound } from "foley";
+  sound: (name: string, sound: Sound) => `import type { Sound } from "tactone";
 
 export const ${name}: Sound = ${literal(sound)};
 

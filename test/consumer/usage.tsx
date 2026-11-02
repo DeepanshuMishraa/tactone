@@ -3,9 +3,9 @@
  * `pnpm check:package` builds dist, then compiles this file against it.
  */
 
-import { createSounds, defaultRules, defineSounds, GLASS, Levels, Sound, strike } from "foley";
-import { chime, felt, glass } from "foley/presets";
-import { SoundRoot, useSounds } from "foley/react";
+import { createSounds, defaultRules, defineSounds, GLASS, Levels, Sound, strike } from "tactone";
+import { chime, felt, glass } from "tactone/presets";
+import { SoundRoot, useSounds } from "tactone/react";
 
 const config = defineSounds({ sounds: glass, rules: defaultRules });
 

@@ -13,9 +13,9 @@
     "skipLibCheck": true,
     "types": [],
     "paths": {
-      "foley": ["../../dist/index.d.ts"],
-      "foley/react": ["../../dist/react.d.ts"],
-      "foley/presets": ["../../dist/presets.d.ts"]
+      "tactone": ["../../dist/index.d.ts"],
+      "tactone/react": ["../../dist/react.d.ts"],
+      "tactone/presets": ["../../dist/presets.d.ts"]
     }
   },
   "files": ["usage.tsx"]
