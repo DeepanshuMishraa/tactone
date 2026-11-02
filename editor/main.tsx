@@ -6,7 +6,7 @@ import { Sound, type Tweak } from "../src/sound.ts";
 import { type Change, Code } from "./code.ts";
 import { Draft, RECIPES } from "./create.ts";
 import { CreatePage } from "./create-page.tsx";
-import { audio, CodeBlock, downloadWav, Format, Morph, moveThroughGrid, Slider, useAudition, useCopy, useSpaceToPlay, Wave } from "./parts.tsx";
+import { audio, CodeBlock, Format, Morph, moveThroughGrid, Slider, Toast, useAudition, useSpaceToPlay, useWavExport, Wave } from "./parts.tsx";
 import "./styles.css";
 
 import { MOODS, PRESET_LIST, SOUND_LIST } from "./catalog.ts";
@@ -23,7 +23,7 @@ function PresetsPage({ onCreateFrom }: { readonly onCreateFrom: (draft: Draft) =
   const [purpose, setPurpose] = useState<Purpose>("tap");
   const [shapes, setShapes] = useState<Readonly<Record<string, PresetShape>>>({});
   const [tryValue, setTryValue] = useState(0.5);
-  const { copied, copy } = useCopy();
+  const { toast, save } = useWavExport();
   const demo = useRef<HTMLFormElement>(null);
 
   const soundOf = (forStyle: Style, forPurpose: Purpose) => {
@@ -163,20 +163,10 @@ function PresetsPage({ onCreateFrom }: { readonly onCreateFrom: (draft: Draft) =
         </nav>
 
         <div className="buttons centered">
-          <button
-            type="button"
-            className="button primary"
-            onClick={() => {
-              replay();
-              void copy(code);
-            }}
-          >
-            <Morph>{copied ? "Copied" : "Copy code"}</Morph>
-          </button>
-          <button type="button" className="button" onClick={() => onCreateFrom(Draft.of(`My ${soundName.toLowerCase()}`, current.layers, current.room ?? 0))}>
+          <button type="button" className="button primary" onClick={() => onCreateFrom(Draft.of(`My ${soundName.toLowerCase()}`, current.layers, current.room ?? 0))}>
             Edit in Create
           </button>
-          <button type="button" className="button" onClick={() => downloadWav(current, `${style}-${purpose}`)}>
+          <button type="button" className="button" onClick={() => save(current, `${style}-${purpose}`)}>
             WAV
           </button>
           {edited ? (
@@ -216,6 +206,7 @@ function PresetsPage({ onCreateFrom }: { readonly onCreateFrom: (draft: Draft) =
           <input type="text" placeholder="Type here" aria-label="Text field" />
         </form>
       </div>
+      <Toast toast={toast} />
     </main>
   );
 }

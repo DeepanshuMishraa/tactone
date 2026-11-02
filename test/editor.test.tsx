@@ -149,14 +149,32 @@ describe("editor", () => {
     expect(block?.querySelector(".token-keyword")?.textContent).toBe("import");
   });
 
-  it("plays the selected sound, with its changes, from both copy buttons", async () => {
+  it("plays the selected sound, with its changes, from the copy button", async () => {
     // Earlier tests left Retro's tap with its pitch slider at the top: 12 semitones up.
     const expected = (sets.retro.tap.layers[0]?.frequency ?? 0) * 2;
-    for (const copy of [button("Copy code"), document.querySelector(".code-copy")]) {
-      if (!(copy instanceof HTMLButtonElement)) throw new Error("the page is missing a copy button");
-      const preview = await heardFrom(copy);
-      expect(preview?.layers[0]?.frequency).toBeCloseTo(expected);
-    }
+    const copy = document.querySelector(".code-copy");
+    if (!(copy instanceof HTMLButtonElement)) throw new Error("the page is missing a copy button");
+    const preview = await heardFrom(copy);
+    expect(preview?.layers[0]?.frequency).toBeCloseTo(expected);
+  });
+
+  it("has one copy button, in the code block", () => {
+    expect(() => button("Copy code")).toThrow();
+    expect(document.querySelectorAll(".code-copy")).toHaveLength(1);
+  });
+
+  it("says when the WAV has downloaded", async () => {
+    await act(async () => button("WAV").click());
+    expect(document.querySelector(".toast[data-tone='success']")?.textContent).toBe("Downloaded retro-tap.wav");
+  });
+
+  it("says when the WAV could not download", async () => {
+    const create = vi.spyOn(URL, "createObjectURL").mockImplementation(() => {
+      throw new Error("blob URLs are blocked");
+    });
+    await act(async () => button("WAV").click());
+    create.mockRestore();
+    expect(document.querySelector(".toast[data-tone='error']")?.textContent).toContain("blob URLs are blocked");
   });
 
   it("opens the code block on demand and renames its title to the file", async () => {
@@ -235,12 +253,11 @@ describe("editor", () => {
     expect(code()).toContain("export const myTap: Sound");
   });
 
-  it("plays the sound being made from both copy buttons on Create", async () => {
-    for (const copy of [button("Copy code"), document.querySelector(".code-copy")]) {
-      if (!(copy instanceof HTMLButtonElement)) throw new Error("the page is missing a copy button");
-      const preview = await heardFrom(copy);
-      expect(preview?.layers[0]?.kind).toBe("noise");
-    }
+  it("plays the sound being made from the copy button on Create", async () => {
+    const copy = document.querySelector(".code-copy");
+    if (!(copy instanceof HTMLButtonElement)) throw new Error("the page is missing a copy button");
+    const preview = await heardFrom(copy);
+    expect(preview?.layers[0]?.kind).toBe("noise");
   });
 
   it("returns to presets", async () => {

@@ -589,6 +589,72 @@ kbd {
   margin-top: 0;
 }
 
+.buttons + .codeblock,
+.note + .codeblock {
+  margin-top: 16px;
+}
+
+/* Toast: a raised pill that rises from the bottom, says what happened, and leaves. */
+
+.toast-region {
+  position: fixed;
+  inset: auto 16px 24px;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.toast {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 9px 14px 9px 12px;
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--raise-card);
+  animation:
+    toast-in 320ms var(--ease),
+    toast-out 260ms var(--ease) 2340ms forwards;
+}
+
+.toast svg {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.toast[data-tone="success"] svg {
+  color: var(--code-string);
+}
+
+.toast[data-tone="error"] svg {
+  color: var(--code-keyword);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
 /* Waveform: a recessed well the sound sits inside. */
 
 .wave {
@@ -1148,6 +1214,10 @@ code {
 @media (prefers-reduced-motion: reduce) {
   .wave i {
     display: none;
+  }
+
+  .toast {
+    animation: none;
   }
 
   .button,

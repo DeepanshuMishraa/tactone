@@ -8,7 +8,7 @@ import { useCallback, useMemo, useState } from "react";
 import type { Layer, Sound } from "../src/sound.ts";
 import { Code } from "./code.ts";
 import { ADDITIONS, Draft, FEELS, identifier, Library, Part, RECIPES, type Saved, type Shape, surprise } from "./create.ts";
-import { CodeBlock, downloadWav, Format, Morph, Slider, useAudition, useCopy, useSpaceToPlay, Wave } from "./parts.tsx";
+import { CodeBlock, Format, Morph, Slider, Toast, useAudition, useSpaceToPlay, useWavExport, Wave } from "./parts.tsx";
 
 const NO_SOUNDS: Readonly<Record<string, Sound>> = {};
 
@@ -18,7 +18,7 @@ export function CreatePage({ draft, onChange }: Props) {
   const [saved, setSaved] = useState(Library.load);
   const [notice, setNotice] = useState("");
   const { hear, hearSoon, plays } = useAudition(NO_SOUNDS);
-  const { copied, copy } = useCopy();
+  const { toast, save } = useWavExport();
 
   const sound = useMemo(() => Draft.sound(draft), [draft]);
   const replay = useCallback(() => hear(sound), [hear, sound]);
@@ -234,17 +234,7 @@ export function CreatePage({ draft, onChange }: Props) {
           >
             Save
           </button>
-          <button
-            type="button"
-            className="button"
-            onClick={() => {
-              replay();
-              void copy(code);
-            }}
-          >
-            <Morph>{copied ? "Copied" : "Copy code"}</Morph>
-          </button>
-          <button type="button" className="button" onClick={() => downloadWav(sound, identifier(draft.name))}>
+          <button type="button" className="button" onClick={() => save(sound, identifier(draft.name))}>
             WAV
           </button>
         </div>
@@ -281,6 +271,7 @@ export function CreatePage({ draft, onChange }: Props) {
           ))}
         </ul>
       </aside>
+      <Toast toast={toast} />
     </div>
   );
 }

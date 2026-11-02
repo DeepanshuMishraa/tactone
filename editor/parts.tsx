@@ -3,6 +3,7 @@
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { TextMorph } from "torph/react";
 import { defaultRules } from "../src/defaults.ts";
+import { sets } from "../src/presets.ts";
 import { RENDER_RATE, render } from "../src/render.ts";
 import type { Sound } from "../src/sound.ts";
 import { createSounds } from "../src/sounds.ts";
@@ -159,13 +160,70 @@ export function useSpaceToPlay(play: () => void) {
   }, [play]);
 }
 
-export function downloadWav(sound: Sound, name: string) {
-  const url = URL.createObjectURL(Code.wav(sound));
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `${name}.wav`;
-  link.click();
-  URL.revokeObjectURL(url);
+export type Download = { readonly ok: true; readonly file: string } | { readonly ok: false; readonly file: string; readonly reason: string };
+
+/** Hands the browser a WAV of the sound. Reports whether it could, since a download gives no feedback of its own. */
+export function downloadWav(sound: Sound, name: string): Download {
+  const file = `${name}.wav`;
+  try {
+    const url = URL.createObjectURL(Code.wav(sound));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file;
+    link.click();
+    // Revoking straight away can cancel the download in some browsers, so give it a moment to start.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    return { ok: true, file };
+  } catch (error) {
+    return { ok: false, file, reason: error instanceof Error ? error.message : "the browser refused the download" };
+  }
+}
+
+/** The editor's own feedback sounds, kept apart from `audio` so they never replace the sound being shaped. */
+const feedback = createSounds({ sounds: { success: sets.soft.success, error: sets.soft.error } });
+
+type ToastState = { readonly id: number; readonly tone: "success" | "error"; readonly message: string };
+
+const TOAST_MS = 2600;
+
+/** A small note that rises from the bottom, says what just happened with a matching sound, and leaves on its own. */
+export function useToast() {
+  const [toast, setToast] = useState<ToastState | null>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const show = useCallback((tone: ToastState["tone"], message: string) => {
+    feedback.play(tone);
+    clearTimeout(timer.current);
+    setToast({ id: performance.now(), tone, message });
+    timer.current = setTimeout(() => setToast(null), TOAST_MS);
+  }, []);
+  useEffect(() => () => clearTimeout(timer.current), []);
+  return { toast, show };
+}
+
+export function Toast({ toast }: { readonly toast: ToastState | null }) {
+  return (
+    <div className="toast-region" role="status" aria-live="polite">
+      {toast === null ? null : (
+        <div className="toast" data-tone={toast.tone} key={toast.id}>
+          <svg viewBox="0 0 16 16" aria-hidden="true">
+            {toast.tone === "success" ? <path d="m3.5 8.5 3 3 6-7" /> : <path d="M4.5 4.5l7 7m0-7-7 7" />}
+          </svg>
+          {toast.message}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Downloads a WAV and says so with a toast, or says why it could not. */
+export function useWavExport() {
+  const { toast, show } = useToast();
+  const save = (sound: Sound, name: string) => {
+    const result = downloadWav(sound, name);
+    if (result.ok) show("success", `Downloaded ${result.file}`);
+    else show("error", `Couldn't download ${result.file}: ${result.reason}. Your sound is unchanged; try again.`);
+  };
+  return { toast, save };
 }
 
 /** The one audio connection both pages share. */
