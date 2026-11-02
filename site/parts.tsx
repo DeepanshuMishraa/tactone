@@ -51,6 +51,7 @@ export function Footer() {
       <span>MIT licensed</span>
       <a href={LINKS.github}>GitHub</a>
       <a href={LINKS.npm}>npm</a>
+      <a href="/agents.md">agents.md</a>
     </footer>
   );
 }

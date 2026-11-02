@@ -362,6 +362,13 @@ const balanced = Levels.normalize(chord, -23);`}
             <p>
               This copies it to <code>~/.agents/skills/tactone</code>, replacing any copy already there.
             </p>
+            <p>
+              Agents working on your app can also read{" "}
+              <a className="inline-link" href="/agents.md">
+                /agents.md
+              </a>
+              , a plain-markdown guide to adding Tactone correctly.
+            </p>
           </Section>
         </main>
       </div>

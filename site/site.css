@@ -899,3 +899,15 @@ html {
     display: none;
   }
 }
+
+.inline-link {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 160ms var(--ease);
+}
+
+.inline-link:hover {
+  text-decoration-color: currentColor;
+}
